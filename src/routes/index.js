@@ -1,5 +1,5 @@
-const loginRouter = require("./login");
+const authRouter = require("./auth");
 const routes = (app) => {
-  app.use("/login", loginRouter);
+  app.use("/auth", authRouter);
 };
 module.exports = routes;
