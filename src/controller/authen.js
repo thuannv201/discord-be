@@ -3,6 +3,10 @@ const dotenv = require("dotenv");
 const UserModel = require("../models/userModels");
 dotenv.config();
 const EXPIRES_TIME = "2m";
+const bcrypt = require("bcrypt");
+const { sendSuccessMessage, sendFailMessage } = require("../utils");
+const saltRounds = 10;
+
 class LoginController {
   resolveLogin(req, res) {
     const data = res.locals.tokenPayload;
@@ -13,7 +17,7 @@ class LoginController {
     const refToken = jwt.sign(data, process.env.REFRESH_TOKEN_JWT_KEY, {
       expiresIn: EXPIRES_TIME,
     });
-    res.send({accessToken, status: "success", refToken});
+    res.send({ accessToken, status: "success", refToken });
   }
 
   refreshToken(req, res) {
@@ -26,30 +30,39 @@ class LoginController {
       if (data?.username) {
         const username = data.username;
         const newToken = jwt.sign(
-          {username},
+          { username },
           process.env.ACCESS_TOKEN_JWT_KEY,
-          {expiresIn: EXPIRES_TIME}
+          { expiresIn: EXPIRES_TIME }
         );
-        res.send({accessToken: newToken, username: username});
+        res.send({ accessToken: newToken, username: username });
       }
     });
   }
 
   register(req, res) {
     const received = req.body;
-    UserModel.create({...received, role: "init", isActive: true})
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
+    bcrypt.genSalt(saltRounds, function (err, salt) {
+      bcrypt.hash(received.password, salt).then((hash) => {
+        received.password = hash;
+        UserModel.create({ ...received })
+          .then((data) => {
+            res.send(sendSuccessMessage("Register successfully!"));
+          })
+          .catch((err) => {
+            res
+              .status(201)
+              .send(
+                sendFailMessage("Register Failed!", {}, err.code, "username")
+              );
+          });
       });
+    });
   }
 
   test(req, res) {
     UserModel.find({}).then((users) => {
       const userData = users.map((data) => {
-        return {id: data._id, username: data.username, role: data.role};
+        return { id: data._id, username: data.username, role: data.role };
       });
       res.send(userData);
     });

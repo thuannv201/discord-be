@@ -7,6 +7,6 @@ app.use(express.json());
 db.connect();
 routes(app);
 
-app.listen(4508, () => {
+app.listen(4508,"0.0.0.0", () => {
   console.log("listening on localhost:4508");
 });
