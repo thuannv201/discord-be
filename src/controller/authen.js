@@ -124,20 +124,24 @@ class AuthController {
   reset(req, res) {
     const newPassword = req.body.newPassword;
     const username = res.locals.username;
-    bcrypt.genSalt(saltRounds, function (err, salt) {
-      bcrypt.hash(newPassword, salt).then((hash) => {
-      UserModel.updateOne({ username: username }, { password: hash })
-      .then((data) => {
-        res.send(sendSuccessMessage("Password changed!"))
-      })
-      .catch((err) => {
-        res.status(201).sendFailMessage("Unknown Error while reset password",err)
+    if (newPassword && typeof newPassword == "string") {
+      bcrypt.genSalt(saltRounds, function (err, salt) {
+        bcrypt.hash(newPassword, salt).then((hash) => {
+          UserModel.updateOne({ username: username }, { password: hash })
+            .then((data) => {
+              res.send(sendSuccessMessage("Password changed!"));
+            })
+            .catch((err) => {
+              res
+                .status(201)
+                .sendFailMessage("Unknown Error while reset password", err);
+            });
+        });
       });
-      });
-    });
-
-
-
+    }
+    else{
+      res.status(201).send(sendFailMessage("Reset password failed"))
+    }
   }
 
   test(req, res) {

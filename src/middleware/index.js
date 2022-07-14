@@ -19,15 +19,18 @@ const verifyToken = (req, res, next) => {
 
 const verifyUser = (req, res, next) => {
   const received = req.body;
+
   UserModel.findOne({ username: received.username })
     .then((data) => {
       if (!data) {
         res.status(404).json(sendFailMessage("User not found"));
-      } else {
+      } 
+      if(data) {
         bcrypt.compare(
           received.password,
           data.password,
           function (err, result) {
+          console.log('result :', result);
             if (result) {
               res.locals.tokenPayload = {
                 username: data.username,
@@ -37,7 +40,8 @@ const verifyUser = (req, res, next) => {
                 updatedAt: data.updatedAt,
               };
               next();
-            } else {
+            } 
+            else {
               res.status(201).json(sendFailMessage("Password incorrect"));
             }
           }
@@ -45,7 +49,7 @@ const verifyUser = (req, res, next) => {
       }
     })
     .catch((e) => {
-      console.log("error", e);
+      res.status(201).json(sendFailMessage("Password incorrect",e));
     });
 };
 
@@ -62,7 +66,6 @@ function verifyTokenResetPw(req,res,next){
   const token = received.token
   if(!token) res.status(401).send(sendFailMessage("Token invalid"))
   jwt.verify(token, process.env.FPW_TOKEN_JWT_KEY, (err,data)=>{
-
     if(err){
       res.status(401)
     }
