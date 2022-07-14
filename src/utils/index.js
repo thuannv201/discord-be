@@ -1,5 +1,5 @@
 function sendFailMessage(message = "", other = {}, status = null,documentName="element") {
-console.log('status :', status);
+
   switch (status) {
     case null:
       return Object.assign(

@@ -57,4 +57,20 @@ function validateUsername(req,res,next){
   if(iUsernameValid) next()
 }
 
-module.exports = { verifyToken, verifyUser, validateUsername };
+function verifyTokenResetPw(req,res,next){
+  const received = req.body
+  const token = received.token
+  if(!token) res.status(401).send(sendFailMessage("Token invalid"))
+  jwt.verify(token, process.env.FPW_TOKEN_JWT_KEY, (err,data)=>{
+
+    if(err){
+      res.status(401)
+    }
+    if(data){;
+    res.locals.username = data.username
+      next()
+    }
+  })
+}
+
+module.exports = { verifyToken, verifyUser, validateUsername, verifyTokenResetPw };
