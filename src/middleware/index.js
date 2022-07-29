@@ -67,9 +67,11 @@ function verifyTokenResetPw(req,res,next){
   if(!token) res.status(401).send(sendFailMessage("Token invalid"))
   jwt.verify(token, process.env.FPW_TOKEN_JWT_KEY, (err,data)=>{
     if(err){
-      res.status(401)
+    console.log('err :', err);
+      res.status(201).send(sendFailMessage("Token invalid!",err))
     }
     if(data){;
+    console.log('data :', data);
     res.locals.username = data.username
       next()
     }

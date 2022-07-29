@@ -29,7 +29,7 @@ POST http://localhost:4508/auth/forgotPassword
 Content-Type: application/json
 
 {
-    "username":"hochv133"
+    "username":"hochv12"
 }
 
 ###resetpw
@@ -37,8 +37,8 @@ POST http://localhost:4508/auth/reset
 Content-Type: application/json
 
 {
-    "newPassword":"hochv133",
-    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhvY2h2MTMzIiwiaWF0IjoxNjU3NzkwNTYwLCJleHAiOjE2NTc3OTE0NjB9.it3179qwej31Ck3GmzIcOjCkwZ7DqYgq4AtGyQR42BM"
+    "newPassword":"112233",
+    "token":"eyJhbGciOiJTkwNjgzNTQsImV4cCI6MTY1OTA2OTI1NH0.3DPviZi5V7gqe0OC83UMIpQUSsD8hz0504D9NfY5k38"
 }
 
 ###
