@@ -104,7 +104,7 @@ class AuthController {
           template: "emailForgotPw", // the name of the template file i.e email.handlebars
           context: {
             username: data.username, // replace {{name}} with Adebola
-            link: `http://localhost:6508/auth/reset${resetPwToken}`, // replace {{company}} with My Company
+            link: `http://localhost:6508/auth/reset?token=${resetPwToken}`, // replace {{company}} with My Company
           },
         };
         transporter.sendMail(mailOptions, function (error, info) {
