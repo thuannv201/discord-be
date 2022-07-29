@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const hbs = require("nodemailer-express-handlebars");
 const nodemailer = require("nodemailer");
 const path = require("path");
-const EXPIRES_TIME = "30s";
+const EXPIRES_TIME = "10m";
 const {sendSuccessMessage, sendFailMessage} = require("../utils");
 const saltRounds = 10;
 dotenv.config();
