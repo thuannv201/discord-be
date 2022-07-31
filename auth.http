@@ -19,8 +19,8 @@ POST http://localhost:4508/auth/register
 Content-Type: application/json
 
 {
-    "username":"hochv123",
-    "password":"123",
+    "username":"testtttt",
+    "password":"427132fff",
     "email":"testhive98765@gmail.com"
 }
 
