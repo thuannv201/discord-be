@@ -3,8 +3,8 @@ POST http://localhost:4508/auth/login
 Content-Type: application/json
 
 {
-    "username":"hochv133",
-    "password":"hochv1334"
+    "username":"vulong",
+    "password":"123123"
 }
 ### reftoken
 POST http://localhost:4508/auth/refreshToken
@@ -43,4 +43,4 @@ Content-Type: application/json
 
 ###
 GET http://localhost:4508/auth/test
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZ1bG9uZyIsInBhc3N3b3JkIjoiJDJiJDEwJHk4d1YvMm50QkNIVFRXc243TzRGVS5lL3Z3alFMQmJjbDNoMzRrOHdna1FRUFVyZ1l3LlB5Iiwicm9sZSI6ImluaXQiLCJpc0FjdGl2ZSI6ZmFsc2UsInVwZGF0ZWRBdCI6IjIwMjItMDctMTRUMTA6MTk6MDIuOTI1WiIsImlhdCI6MTY1OTM0OTY0NywiZXhwIjoxNjU5MzUwMjQ3fQ.QSVOfd5bbOgdkwpjvJvuTaMK_uFOR7os7cVvQco0Pmk
