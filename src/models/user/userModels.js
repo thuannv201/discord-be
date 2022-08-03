@@ -39,6 +39,10 @@ const User = new Schema(
       },
       required: [true, "Password is required"],
     },
+    details: {
+      type: Schema.Types.ObjectId,
+      ref: "User_detail",
+    },
   },
   {
     timestamps: true,

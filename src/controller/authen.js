@@ -73,9 +73,20 @@ class AuthController {
     bcrypt.genSalt(saltRounds, function (err, salt) {
       bcrypt.hash(received.password, salt).then((hash) => {
         received.password = hash;
-        UserModel.create({...received, details: data._id})
+        UserModel.create({
+          password: hash,
+          username: received?.username,
+          email: received.email,
+        })
           .then((data) => {
-            res.send(sendSuccessMessage("Register successfully!"));
+            UserDetailModel.create({...received}).then((registData) => {
+              UserModel.updateOne(
+                {username: data.username},
+                {userId: registData._id}
+              ).then((dataUpdated) => {
+                res.send(sendSuccessMessage("Register successfully!", data));
+              });
+            });
           })
           .catch((err) => {
             if (err.name === "ValidationError") {
@@ -90,6 +101,13 @@ class AuthController {
                 errors,
                 message: "Register failed",
               });
+            } else {
+              res.status(201).send(
+                sendFailMessage("Register Failed!", {
+                  ...err,
+                  mes: err.message,
+                })
+              );
             }
           });
       });
