@@ -6,8 +6,8 @@ const bcrypt = require("bcrypt");
 const hbs = require("nodemailer-express-handlebars");
 const nodemailer = require("nodemailer");
 const path = require("path");
-const EXPIRES_TIME = "30s";
-const EXPIRES_TIME_REFRESH = "3m";
+const EXPIRES_TIME = "10m";
+const EXPIRES_TIME_REFRESH = "30m";
 const { sendSuccessMessage, sendFailMessage } = require("../utils");
 const saltRounds = 10;
 dotenv.config();
@@ -67,9 +67,19 @@ class AuthController {
     bcrypt.genSalt(saltRounds, function (err, salt) {
       bcrypt.hash(received.password, salt).then(hash => {
         received.password = hash;
-        UserModel.create({ ...received, details: data._id })
+        UserModel.create({
+          password: hash,
+          username: received?.username,
+          email: received.email,
+        })
           .then(data => {
-            res.send(sendSuccessMessage("Register successfully!"));
+            UserDetailModel.create({ ...received }).then(registData => {
+              UserModel.updateOne({ username: data.username }, { userId: registData._id }).then(
+                dataUpdated => {
+                  res.send(sendSuccessMessage("Register successfully!", data));
+                }
+              );
+            });
           })
           .catch(err => {
             if (err.name === "ValidationError") {
@@ -84,6 +94,13 @@ class AuthController {
                 errors,
                 message: "Register failed",
               });
+            } else {
+              res.status(201).send(
+                sendFailMessage("Register Failed!", {
+                  ...err,
+                  mes: err.message,
+                })
+              );
             }
           });
       });

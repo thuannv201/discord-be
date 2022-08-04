@@ -39,9 +39,6 @@ const User = new Schema(
       },
       required: [true, "Password is required"],
     },
-    role: {type: String, default: "init"},
-    isActive: {type: Boolean, default: false}, //false until
-    phone: {type: String, default: ""},
     details: {
       type: Schema.Types.ObjectId,
       ref: "User_detail",
