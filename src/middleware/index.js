@@ -30,13 +30,9 @@ const verifyUser = (req, res, next) => {
       }
       if (data) {
         bcrypt.compare(received.password, data.password, function (err, result) {
-          console.log("result :", result);
           if (result) {
             res.locals.tokenPayload = {
               username: data.username,
-              password: data.password,
-              role: data.role,
-              isActive: data.isActive,
               updatedAt: data.updatedAt,
               email: data.email,
             };

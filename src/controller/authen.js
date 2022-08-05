@@ -32,12 +32,19 @@ class AuthController {
       });
     }
     try {
-      const user = await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_JWT_KEY);
+      const user = await jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_JWT_KEY
+      );
       const { email } = user;
       const userInfo = await UserModel.findOne({ email });
-      const token = jwt.sign({ user_id: user._id, email }, process.env.ACCESS_TOKEN_JWT_KEY, {
-        expiresIn: "12h",
-      });
+      const token = jwt.sign(
+        { user_id: user._id, email },
+        process.env.ACCESS_TOKEN_JWT_KEY,
+        {
+          expiresIn: "12h",
+        }
+      );
       const newRefreshToken = jwt.sign(
         { user_id: user._id, email },
         process.env.REFRESH_TOKEN_JWT_KEY,
@@ -65,27 +72,47 @@ class AuthController {
   register(req, res) {
     const received = req.body;
     bcrypt.genSalt(saltRounds, function (err, salt) {
-      bcrypt.hash(received.password, salt).then(hash => {
+      bcrypt.hash(received.password, salt).then((hash) => {
         received.password = hash;
         UserModel.create({
           password: hash,
           username: received?.username,
           email: received.email,
         })
-          .then(data => {
-            UserDetailModel.create({ ...received }).then(registData => {
-              UserModel.updateOne({ username: data.username }, { userId: registData._id }).then(
-                dataUpdated => {
-                  res.send(sendSuccessMessage("Register successfully!", data));
-                }
-              );
+          .then((data) => {
+            UserDetailModel.create({ ...received }).then((registData) => {
+              UserModel.updateOne(
+                { username: data.username },
+                { details: registData._id }
+              ).then((dataUpdated) => {
+                const accessToken = jwt.sign(
+                  { username: data.username, email: data.email },
+                  process.env.ACCESS_TOKEN_JWT_KEY,
+                  {
+                    expiresIn: EXPIRES_TIME,
+                  }
+                );
+                const refToken = jwt.sign(
+                  { username: data.username, email: data.email },
+                  process.env.REFRESH_TOKEN_JWT_KEY,
+                  {
+                    expiresIn: EXPIRES_TIME_REFRESH,
+                  }
+                );
+                res.send(
+                  sendSuccessMessage("Register successfully!", {
+                    accessToken,
+                    refToken,
+                  })
+                );
+              });
             });
           })
-          .catch(err => {
+          .catch((err) => {
             if (err.name === "ValidationError") {
               let errors = {};
 
-              Object.keys(err.errors).forEach(key => {
+              Object.keys(err.errors).forEach((key) => {
                 errors[key] = err.errors[key].message;
               });
 
@@ -109,14 +136,18 @@ class AuthController {
 
   forgotPW(req, res) {
     const { username } = req.body;
-    UserModel.findOne({ username: username }).then(data => {
+    UserModel.findOne({ username: username }).then((data) => {
       if (!data) res.status(200).send(sendFailMessage("User not found"));
       if (data) {
         //generate token for 10 minutes
         const username1 = data.username;
-        const resetPwToken = jwt.sign({ username: username1 }, process.env.FPW_TOKEN_JWT_KEY, {
-          expiresIn: "15m",
-        });
+        const resetPwToken = jwt.sign(
+          { username: username1 },
+          process.env.FPW_TOKEN_JWT_KEY,
+          {
+            expiresIn: "15m",
+          }
+        );
         // setup nodemailer + handlebars
         const transporter = nodemailer.createTransport({
           service: "gmail",
@@ -149,7 +180,9 @@ class AuthController {
             return console.log(error);
           } else {
             console.log("Message sent: " + info.response);
-            res.send(sendSuccessMessage("Email sent. Please check your message"));
+            res.send(
+              sendSuccessMessage("Email sent. Please check your message")
+            );
           }
         });
       }
@@ -161,13 +194,15 @@ class AuthController {
     const username = res.locals.username;
     if (newPassword && typeof newPassword == "string") {
       bcrypt.genSalt(saltRounds, function (err, salt) {
-        bcrypt.hash(newPassword, salt).then(hash => {
+        bcrypt.hash(newPassword, salt).then((hash) => {
           UserModel.updateOne({ username: username }, { password: hash })
-            .then(data => {
+            .then((data) => {
               res.send(sendSuccessMessage("Password changed!"));
             })
-            .catch(err => {
-              res.status(201).sendFailMessage("Unknown Error while reset password", err);
+            .catch((err) => {
+              res
+                .status(201)
+                .sendFailMessage("Unknown Error while reset password", err);
             });
         });
       });
@@ -177,8 +212,8 @@ class AuthController {
   }
 
   test(req, res) {
-    UserModel.find({}).then(users => {
-      const userData = users.map(data => {
+    UserModel.find({}).then((users) => {
+      const userData = users.map((data) => {
         return { id: data._id, username: data.username, role: data.role };
       });
       res.send(userData);
