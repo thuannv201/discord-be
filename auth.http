@@ -1,11 +1,11 @@
 ###
 POST http://localhost:4508/channel
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZ1bG9uZyIsInVwZGF0ZWRBdCI6IjIwMjItMDctMTRUMTA6MTk6MDIuOTI1WiIsImVtYWlsIjoidnVsb25ncHRAZ21haWwuY29tIiwiaWF0IjoxNjU5ODc5MzAxLCJleHAiOjE2NTk4Nzk5MDF9.Mc_OtjnTC_8efp3hEp3UN9CQ5mjetkhqOREeTL0dLvY
 
 {
     "recipientIds":["62cf93bec319d67226d3e370","62cfe566e4fef4c35b9263a3"]
 }
-
 ### login
 POST http://localhost:4508/auth/login
 Content-Type: application/json
