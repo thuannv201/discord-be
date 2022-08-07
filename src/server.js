@@ -3,6 +3,8 @@ const db = require("./config");
 const cors = require("cors");
 const routes = require("./routes");
 const app = express();
+const Message = require("./models/conversations/messages");
+const User = require("./models/user/userModels");
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 app.use(
@@ -26,14 +28,34 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.on("chat message", (msg, room) => {
-    if (room) {
-      console.log("room", room);
-      socket.to(room).emit("chat message", msg);
+  socket.on(
+    "chat message",
+    (content, attachments, conversationId, authorId) => {
+      if (conversationId) {
+        console.log("conversationId", conversationId);
+        Message.create({
+          author: authorId,
+          conversationId: conversationId,
+          content: content,
+          attachments: attachments,
+        }).then((data) => {
+          console.log(data);
+
+          socket
+            .to(conversationId)
+            .emit(
+              "chat message",
+              content,
+              attachments,
+              conversationId,
+              authorId
+            );
+        });
+      }
     }
-  });
-  socket.on("join-room", (room) => {
-    socket.join(room);
+  );
+  socket.on("join-conversation", (conversationId) => {
+    socket.join(conversationId);
   });
 });
 

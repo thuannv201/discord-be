@@ -1,3 +1,13 @@
+
+###
+GET http://localhost:4508/channel/messages
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZ1bG9uZyIsInVwZGF0ZWRBdCI6IjIwMjItMDctMTRUMTA6MTk6MDIuOTI1WiIsImVtYWlsIjoidnVsb25ncHRAZ21haWwuY29tIiwiaWF0IjoxNjU5ODc5MzAxLCJleHAiOjE2NTk4Nzk5MDF9.Mc_OtjnTC_8efp3hEp3UN9CQ5mjetkhqOREeTL0dLvY
+
+{
+    "conversationId":"62efbeb4a42dbf33e8fd567c"
+}
+
 ###
 POST http://localhost:4508/channel
 Content-Type: application/json
@@ -52,4 +62,4 @@ Content-Type: application/json
 
 ###
 GET http://localhost:4508/auth/test
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZ1bG9uZyIsInVwZGF0ZWRBdCI6IjIwMjItMDctMTRUMTA6MTk6MDIuOTI1WiIsImVtYWlsIjoidnVsb25ncHRAZ21haWwuY29tIiwiaWF0IjoxNjU5ODc4NjQwLCJleHAiOjE2NTk4NzkyNDB9.VTQQV8XxxIq5mqM2pRvZLHjl2YTEGE6Ryx7KwsIFHBo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZ1bG9uZyIsInVwZGF0ZWRBdCI6IjIwMjItMDctMTRUMTA6MTk6MDIuOTI1WiIsImVtYWlsIjoidnVsb25ncHRAZ21haWwuY29tIiwiaWF0IjoxNjU5ODg5MjY4LCJleHAiOjE2NTk4ODk4Njh9.-Y5J6TFabt4_SvHfZrOhty8vk0pZ4INqA8dqeCaNNnA

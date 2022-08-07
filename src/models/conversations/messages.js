@@ -12,7 +12,7 @@ const ConversationMessage = new Schema(
 );
 
 module.exports = mongoose.model(
-  "ConversationMessage",
+  "conversationmessage",
   ConversationMessage,
-  "conversation_message"
+  "conversationmessage"
 );

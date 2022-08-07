@@ -21,6 +21,7 @@
       <input id="input" autocomplete="off" />
       <button id="send-btn">Send</button>
       <input id="input-room" placeholder="room" autocomplete="off" />
+      <input id="input-author" placeholder="user" autocomplete="off" />
       <button id="join-btn">join</button>
     </form>
 
@@ -34,11 +35,12 @@
         var joinBtn =  document.getElementById("join-btn")
         var input = document.getElementById('input');
         var inputRoom = document.getElementById('input-room');
+        var inputAuthor = document.getElementById('input-author');
   
         sendBtn.addEventListener('click', function(e) {
           e.preventDefault();
           if (input.value && inputRoom.value) {
-            socket.emit('chat message', input.value,inputRoom.value);
+            socket.emit('chat message', input.value,"",inputRoom.value,inputAuthor.value);
             input.value = '';
           }
         });
@@ -46,13 +48,13 @@
         joinBtn.addEventListener('click', function(e) {
           e.preventDefault();
           if (inputRoom.value) {
-            socket.emit("join-room",inputRoom.value);
+            socket.emit("join-conversation",inputRoom.value);
           }
         });
   
-        socket.on('chat message', function(msg) {
+        socket.on('chat message', function(content, attachments, conversationId, authorId) {
             var item = document.createElement('li');
-        item.textContent = msg;
+        item.innerHTML = `user:<strong>${authorId}</strong>: ${content}`;
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });

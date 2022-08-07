@@ -33,6 +33,28 @@ class ConversationController {
         res.send(sendFailMessage("failed occurred", e));
       });
   }
+
+  saveMessage(req, res) {
+    const received = req.body;
+    Message.create({...received}).then((data) => {
+      res.send(
+        sendSuccessMessage("success saved", {
+          data: data,
+        })
+      );
+    });
+  }
+
+  getMessages(req, res) {
+    Message.find({conversationId: req.body?.conversationId}).then((data) => {
+      console.log("data", data);
+      res.send(
+        sendSuccessMessage("success find", {
+          data: data,
+        })
+      );
+    });
+  }
 }
 
 module.exports = new ConversationController();
