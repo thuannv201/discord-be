@@ -6,7 +6,9 @@ const app = express();
 const Message = require("./models/conversations/messages");
 const User = require("./models/user/userModels");
 const http = require("http").Server(app);
-const io = require("socket.io")(http);
+const io = require("socket.io")(http,{cors:{
+  origin:"*"
+}});
 app.use(
   // yarn add cors
   cors({
@@ -16,6 +18,7 @@ app.use(
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
+
 app.options("*", cors());
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
