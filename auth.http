@@ -1,4 +1,5 @@
-
+###
+GET http://localhost:4508/personal
 ###
 GET http://localhost:4508/channel/messages
 Content-Type: application/json

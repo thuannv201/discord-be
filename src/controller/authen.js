@@ -214,10 +214,7 @@ class AuthController {
 
   test(req, res) {
     UserModel.find({}).then((users) => {
-      const userData = users.map((data) => {
-        return {id: data._id, username: data.username, role: data.role};
-      });
-      res.send(userData);
+      res.send(users);
     });
   }
 }
