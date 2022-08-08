@@ -43,10 +43,12 @@ const User = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User_detail",
     },
-    servers:{
-      type: Schema.Types.ObjectId,
-      ref: "Servers",
-    }
+    servers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Servers",
+      },
+    ],
   },
   {
     timestamps: true,
