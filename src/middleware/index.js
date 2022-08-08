@@ -35,6 +35,7 @@ const verifyUser = (req, res, next) => {
               username: data.username,
               updatedAt: data.updatedAt,
               email: data.email,
+              id:data._id
             };
             next();
           } else {

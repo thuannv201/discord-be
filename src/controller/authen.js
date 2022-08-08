@@ -23,7 +23,7 @@ class AuthController {
     const refToken = jwt.sign(data, process.env.REFRESH_TOKEN_JWT_KEY, {
       expiresIn: EXPIRES_TIME_REFRESH,
     });
-    res.send({accessToken, status: "success", refToken});
+    res.send({accessToken, status: "success", refToken, id:data.id });
   }
   async refresh(req, res, next) {
     const {refreshToken} = req.body;
