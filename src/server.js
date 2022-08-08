@@ -5,10 +5,12 @@ const routes = require("./routes");
 const app = express();
 const Message = require("./models/conversations/messages");
 const User = require("./models/user/userModels");
-const http = require("http").Server(app);
-const io = require("socket.io")(http,{cors:{
-  origin:"*"
-}});
+const http = require("http").createServer(app);
+const io = require("socket.io")(http, {
+  cors: {
+    origin: "*",
+  },
+});
 app.use(
   // yarn add cors
   cors({
@@ -20,7 +22,7 @@ app.use(
 );
 
 app.options("*", cors());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const PORT = process.env.PORT || 4508;
 db.connect();
@@ -62,9 +64,9 @@ io.on("connection", (socket) => {
   });
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("listening on localhost:4508");
-});
+// app.listen(PORT, "0.0.0.0", () => {
+//   console.log("listening on localhost:4508");
+// });
 
 http.listen(PORT, () => {
   console.log(`Socket.IO server running at http://localhost:${PORT}/`);
