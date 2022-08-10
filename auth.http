@@ -38,9 +38,9 @@ POST http://localhost:4508/auth/register
 Content-Type: application/json
 
 {
-    "username":"neseastt",
-    "password":"4271s32fftf",
-    "email":"tesfffaf@gmail.com",
+    "username":"testspecuser",
+    "password":"11223344",
+    "email":"testerrr@gmail.com",
     "birth": "2022-08-03T20:45:29+07:00"
 }
 

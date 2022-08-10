@@ -3,13 +3,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const UserDetails = new Schema(
+const UserSpec = new Schema(
   {
-    userSpecial: {type: Schema.Types.ObjectId, ref: "Users"},
-    userId: {type: Schema.Types.ObjectId},
-    role: {type: String, default: ""},
+    owner: { type: Schema.Types.ObjectId, ref: "Users" },
+    specialList: [
+      {
+        role: { type: String, default: "" },
+        id: { type: Schema.Types.ObjectId, ref: "Users" },
+      },
+    ],
   },
-  {timestamp: true}
+  { timestamp: true }
 );
 
-module.exports = mongoose.model("User_special", UserDetails, "user_special");
+module.exports = mongoose.model("User_special", UserSpec, "user_special");

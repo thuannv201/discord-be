@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const UserModel = require("../models/user/userModels");
 const UserDetailModel = require("../models/user/userDetail");
+const UserSpec = require("../models/user/userSpecial");
 const bcrypt = require("bcrypt");
 const hbs = require("nodemailer-express-handlebars");
 const nodemailer = require("nodemailer");
@@ -108,6 +109,9 @@ class AuthController {
                 );
               });
             });
+            UserSpec.create({owner:data._id}).then(userSpecData=>{
+            console.log('userSpecData :', userSpecData);
+            })
           })
           .catch((err) => {
             if (err.name === "ValidationError") {
