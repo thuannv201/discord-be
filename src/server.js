@@ -4,6 +4,7 @@ const cors = require("cors");
 const routes = require("./routes");
 const app = express();
 const Message = require("./models/conversations/messages");
+const UserSpecial = require("./models/user/userSpecial");
 const UserRequest = require("./models/user/requestUser");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
@@ -22,7 +23,7 @@ app.use(
 );
 
 app.options("*", cors());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 const PORT = process.env.PORT || 4508;
 db.connect();
@@ -67,8 +68,41 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_request_friend", (requestor, to) => {
-    UserRequest.create({ requestor: requestor?.id, to: to }).then((data) => {
+    UserRequest.create({requestor: requestor?.id, to: to}).then((data) => {
       socket.to(to).emit("receive_request_friend", requestor);
+    });
+  });
+
+  socket.on("accept_request_user", (requestor, to) => {
+    Promise.all([
+      UserSpecial.findOne({owner: to}).then((data) => {
+        if (data) {
+          UserSpecial.findOneAndUpdate(
+            {owner: to},
+            {$push: {specialList: {role: "friend", id: requestor}}}
+          );
+        } else {
+          UserSpecial.create({
+            owner: to,
+            specialList: [{role: "friend", id: requestor}],
+          });
+        }
+      }),
+      UserSpecial.findOne({owner: requestor}).then((data) => {
+        if (data) {
+          UserSpecial.findOneAndUpdate(
+            {owner: requestor},
+            {$push: {specialList: {role: "friend", id: to}}}
+          );
+        } else {
+          UserSpecial.create({
+            owner: requestor,
+            specialList: [{role: "friend", id: to}],
+          });
+        }
+      }),
+    ]).then((values) => {
+      socket.to(to).to(requestor).emit("request_accepted");
     });
   });
 });
