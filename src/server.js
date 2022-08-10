@@ -4,7 +4,7 @@ const cors = require("cors");
 const routes = require("./routes");
 const app = express();
 const Message = require("./models/conversations/messages");
-const User = require("./models/user/userModels");
+const UserRequest = require("./models/user/requestUser");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
@@ -45,7 +45,6 @@ io.on("connection", (socket) => {
           attachments: attachments,
         }).then((data) => {
           console.log(data);
-
           socket
             .to(conversationId)
             .emit(
@@ -61,6 +60,16 @@ io.on("connection", (socket) => {
   );
   socket.on("join-conversation", (conversationId) => {
     socket.join(conversationId);
+  });
+
+  socket.on("receive_request_friend", (requestor) => {
+    console.log("requestor :", requestor);
+  });
+
+  socket.on("send_request_friend", (requestor, to) => {
+    UserRequest.create({ requestor: requestor?.id, to: to }).then((data) => {
+      socket.to(to).emit("receive_request_friend", requestor);
+    });
   });
 });
 

@@ -48,7 +48,7 @@
         joinBtn.addEventListener('click', function(e) {
           e.preventDefault();
           if (inputRoom.value) {
-            socket.emit("join-conversation",inputRoom.value);
+            socket.emit("join-conversation",inputRoom.value)
           }
         });
   
