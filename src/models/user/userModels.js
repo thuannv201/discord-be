@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const Servers= require("../servers/server"); //imporant
 const User = new Schema(
   {
     username: {

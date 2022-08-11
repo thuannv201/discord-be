@@ -6,12 +6,14 @@ class PersonalController {
   getPersonalData(req, res) {
     try {
       if (req?.query?.id) {
+      console.log('req?.query?.id :', req?.query?.id);
         UserModel.findOne({_id: req.query.id})
           .populate("details")
           .populate("servers")
           .exec((err, data) => {
+          console.log('err :', err);
             if (err) {
-              res.send(sendFailMessage("fail", {err: err}));
+              res.status(201).send(sendFailMessage("fail", {err: err}));
             }
             if (data) {
               res.send(sendSuccessMessage("Success", {personal: data}));
