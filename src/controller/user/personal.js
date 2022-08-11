@@ -87,23 +87,6 @@ class PersonalController {
     } catch (e) {}
   }
 
-  // acceptRequest(req, res) {
-  //   try {
-  //     UserSpecial.findOne({owner:req?.query?.owner}).then(data=>{
-  //       if(data){
-  //         UserSpecial.updateOne({owner:req?.query?.owner},{$push:{specialList:{role:"friend",}}})
-  //       }
-  //     })
-  //   } catch (e) {
-  //     res.status(201).send(sendFailMessage("failed occurred", err));
-  //   }
-  // }
 }
 
 module.exports = new PersonalController();
-
-// try {
-
-// } catch (e) {
-//   res.status(201).send(sendFailMessage("failed occurred", err));
-// }
