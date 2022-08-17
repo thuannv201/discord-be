@@ -65,7 +65,7 @@ class PersonalController {
     }
   }
 
-  getListSpecialUsers(req, res) {
+  getListFriend(req, res) {
     try {
     } catch (e) {}
   }
