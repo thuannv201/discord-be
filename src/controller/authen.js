@@ -39,19 +39,20 @@ class AuthController {
         process.env.REFRESH_TOKEN_JWT_KEY
       );
       const {email} = user;
+      console.log('user :', user);
       const userInfo = await UserModel.findOne({email});
       const token = jwt.sign(
-        {user_id: user._id, email},
+        {id: userInfo._id, email},
         process.env.ACCESS_TOKEN_JWT_KEY,
         {
-          expiresIn: "12h",
+          expiresIn: EXPIRES_TIME,
         }
       );
       const newRefreshToken = jwt.sign(
-        {user_id: user._id, email},
+        {id: userInfo._id, email},
         process.env.REFRESH_TOKEN_JWT_KEY,
         {
-          expiresIn: "36h",
+          expiresIn: EXPIRES_TIME_REFRESH,
         }
       );
       userInfo.token = token;
@@ -61,8 +62,6 @@ class AuthController {
         email: userInfo.email,
         userId: userInfo.userId,
         accessToken: userInfo.token,
-        expiresIn: 43200,
-        refreshExpiresIn: 129600,
         refToken: userInfo.refreshToken,
       });
     } catch (error) {
