@@ -1,5 +1,6 @@
 ###
-GET http://localhost:4508/personal
+GET http://localhost:4508/personal/listDM?id=62cf93bec319d67226d3e370
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhvY2h2MTIiLCJ1cGRhdGVkQXQiOiIyMDIyLTA4LTE3VDE0OjIyOjAwLjIyNloiLCJlbWFpbCI6ImhvYzE3MTEyMDAxQGdtYWlsLmNvbSIsImlkIjoiNjJjZjkzYmVjMzE5ZDY3MjI2ZDNlMzcwIiwiaWF0IjoxNjYxNzg0NzYzLCJleHAiOjE2NjE3ODUzNjN9.-4kHiDg7zFuW4UzeeobQrLV1MvkwqfDLYIWqzinUtiM
 ###
 GET http://localhost:4508/channel/messages
 Content-Type: application/json
@@ -22,7 +23,7 @@ POST http://localhost:4508/auth/login
 Content-Type: application/json
 
 {
-    "username":"vulong",
+    "username":"hochv12",
     "password":"123123"
 }
 ### reftoken

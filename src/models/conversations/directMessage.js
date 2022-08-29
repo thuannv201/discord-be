@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const DirectMessages = new Schema(
   {
-    recipients: [{type: Schema.Types.ObjectId}],
+    user: {type: Schema.Types.ObjectId},
+    conversationId: {type: Schema.Types.ObjectId},
   },
   {timestamp: true}
 );
