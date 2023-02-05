@@ -7,7 +7,7 @@ const dbname = "discordDB";
 async function connect() {
   try {
     await mongoose.connect(
-      `mongodb+srv://${username}:${password}@${cluster}.mongodb.net/?retryWrites=true&w=majority`
+      `mongodb+srv://${username}:${password}@${cluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`
     );
     console.log("connected database");
   } catch (e) {
