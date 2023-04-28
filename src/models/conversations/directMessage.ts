@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const DirectMessages = new Schema(
@@ -6,7 +6,7 @@ const DirectMessages = new Schema(
     user: {type: Schema.Types.ObjectId},
     conversationId: {type: Schema.Types.ObjectId},
   },
-  {timestamp: true}
+  {timestamps: true}
 );
 
 module.exports = mongoose.model(

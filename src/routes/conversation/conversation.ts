@@ -1,4 +1,4 @@
-const express = require("express");
+import express = require("express");
 const ConversationController = require("../../controller/private_message");
 const router = express.Router();
 router.get("/messages", ConversationController.getMessages);

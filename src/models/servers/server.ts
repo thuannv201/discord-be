@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const Servers = new Schema(
@@ -11,7 +11,7 @@ const Servers = new Schema(
     publishers:[{ type: Schema.Types.ObjectId,ref:"Users"}],
     rooms:[{type: Schema.Types.ObjectId}],
   },
-  {timestamp: true}
+  {timestamps: true}
 );
 
 module.exports = mongoose.model("Servers", Servers, "Servers");

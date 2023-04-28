@@ -1,9 +1,15 @@
 // Schema này dùng để thao tác với danh sách những người dùng đặc biệt
 // ví dụ: ["bị block", "ưu tiên"]
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import mongoose, {Schema} from "mongoose";
 
-const UserSpec = new Schema(
+interface IUserSpecial {
+  owner?: string | Schema.Types.ObjectId;
+  specialList: {
+    role: string;
+    id: string;
+  }[];
+}
+const UserSpec = new Schema<IUserSpecial>(
   {
     owner: { type: Schema.Types.ObjectId, ref: "Users" },
     specialList: [
@@ -13,7 +19,9 @@ const UserSpec = new Schema(
       },
     ],
   },
-  { timestamp: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("User_special", UserSpec, "user_special");

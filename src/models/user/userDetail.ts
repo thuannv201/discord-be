@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserDetails = new Schema(
@@ -10,7 +10,7 @@ const UserDetails = new Schema(
     avatar: {type: String, default: ""},
     phone: {type: String, default: ""},
   },
-  {timestamp: true}
+  {timestamps: true}
 );
 
 module.exports = mongoose.model("User_detail", UserDetails, "user_details");

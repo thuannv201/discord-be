@@ -1,18 +1,18 @@
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const UserModel = require("../models/user/userModels");
-const bcrypt = require("bcrypt");
-const { sendFailMessage } = require("../utils");
+import jwt = require("jsonwebtoken");
+import dotenv = require("dotenv");
+import UserModel = require("../models/user/userModels");
+import bcrypt = require("bcrypt");
+import { sendFailMessage } from "../utils";
 dotenv.config();
 
-const verifyToken = (req, res, next) => {
+const verifyToken = (req: any, res: any, next: any) => {
   const token = req.headers["authorization"]?.split(" ")?.[1];
 
   if (!token) {
     return res.status(403).send("A token is required for authentication");
   }
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_JWT_KEY);
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_JWT_KEY || "");
     req.user = decoded;
     next();
   } catch (err) {

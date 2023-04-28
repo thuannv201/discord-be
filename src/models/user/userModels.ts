@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const Servers= require("../servers/server"); //imporant
+import Servers = require("../servers/server"); //imporant
 const User = new Schema(
   {
     username: {
@@ -9,17 +9,17 @@ const User = new Schema(
       default: "",
       maxlength: 50,
       validate: {
-        validator: function (v) {
+        validator: function (v: any) {
           return v.length >= 6;
         },
-        message: (props) => `Must be at least 6, got ${props.value.length}`,
+        message: (props: any) => `Must be at least 6, got ${props.value.length}`,
       },
       required: [true, "Username is required"],
     },
     email: {
       type: String,
       validate: {
-        validator: function (v) {
+        validator: function (v: any) {
           const regEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
           return regEmail.test(v);
         },
@@ -32,10 +32,10 @@ const User = new Schema(
     password: {
       type: String,
       validate: {
-        validator: function (v) {
+        validator: function (v: any) {
           return v.length >= 6;
         },
-        message: (props) => `Must be at least 6, got ${props.value.length}`,
+        message: (props: any) => `Must be at least 6, got ${props.value.length}`,
       },
       required: [true, "Password is required"],
     },

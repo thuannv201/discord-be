@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose = require("mongoose");
+//move to config
 const username = "hochv";
 const password = "4vRMNE59peB1KXxQ";
 const cluster = "vcohanee.d7xfkcx";

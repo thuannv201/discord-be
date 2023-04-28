@@ -1,4 +1,4 @@
-function sendFailMessage(message: string = "", other: object = {}, status: number | null = null, documentName: string = "element") {
+export function sendFailMessage(message: string = "", other: object = {}, status: number | null = null, documentName: string = "element") {
   switch (status) {
     case null:
       return Object.assign(
@@ -19,7 +19,7 @@ function sendFailMessage(message: string = "", other: object = {}, status: numbe
       );
   }
 }
-function sendSuccessMessage(message: string = "", other: object = {}) {
+export function sendSuccessMessage(message: string = "", other: object = {}) {
   return Object.assign(
     {
       status: "success",
