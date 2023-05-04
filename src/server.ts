@@ -7,6 +7,7 @@ import {
     ServerToClientEvents,
     SocketData,
 } from "./payload/SocketIoPayload";
+import logger from "./logger/logger";
 
 const PORT = process.env.PORT || 1280;
 const app: Express = express();
@@ -63,5 +64,5 @@ io.on("connection", (socket) => {
 // start our server
 
 app.listen(PORT, () => {
-    console.log(`Socket.IO server running at http://localhost:${PORT}/`);
+    logger.info(`⚡️[server]: Server is running at https://localhost:${PORT}`);
 });
