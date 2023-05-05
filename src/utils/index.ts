@@ -1,6 +1,6 @@
 function sendFailMessage(
     message: string = "",
-    other: object = {},
+    other: any = {},
     status: number | null = null,
     documentName: string = "element"
 ) {
@@ -24,7 +24,7 @@ function sendFailMessage(
             );
     }
 }
-function sendSuccessMessage(message: string = "", other: object = {}) {
+function sendSuccessMessage(message: string = "", other: any = {}) {
     return Object.assign(
         {
             status: "success",

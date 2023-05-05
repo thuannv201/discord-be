@@ -4,6 +4,7 @@ import UserRequest from "../../models/user/requestUser";
 import { sendSuccessMessage, sendFailMessage } from "../../utils";
 import UserSpecial from "../../models/user/userSpecial";
 import conversation from "../../models/conversations/conversation";
+import logger from "../../logger/logger";
 
 class PersonalService {
     /**
@@ -11,22 +12,18 @@ class PersonalService {
      * @param id : number
      * @returns Response
      */
-    getPersonalData(id: number): Response {
-        let response: Response<any, any>;
+    async getPersonalData(id: number): Promise<any> {
         try {
-            if (id) {
-                const user = User.findOne({
-                    _id: id,
-                })
-                    .populate("details")
-                    .populate("servers");
-            } else {
-                
-            }
+            const user = await User.findOne({ _id: id })
+                .populate("details")
+                .populate("servers")
+                .exec();
+            return user;
         } catch (err) {
-            
+            logger.error(err);
+            throw err;
         }
-        return response<{}>();
     }
-
 }
+
+export default new PersonalService();
