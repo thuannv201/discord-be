@@ -1,32 +1,34 @@
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const UserModel = require("../models/user/userModels");
-const UserDetailModel = require("../models/user/userDetail");
-const UserSpec = require("../models/user/userSpecial");
-const bcrypt = require("bcrypt");
-const hbs = require("nodemailer-express-handlebars");
-const nodemailer = require("nodemailer");
-const path = require("path");
-const ObjectID = require("mongodb").ObjectId;
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import UserModel from "../models/user/userModels";
+import UserDetailModel from "../models/user/userDetail";
+import UserSpec from "../models/user/userSpecial";
+import bcrypt from "bcrypt";
+import hbs from "nodemailer-express-handlebars";
+import nodemailer from "nodemailer";
+import path from "path";
+import ObjectID from "mongodb";
+import {Request, Response, NextFunction} from "express";
 const EXPIRES_TIME = "10m";
 const EXPIRES_TIME_REFRESH = "30m";
-const {sendSuccessMessage, sendFailMessage} = require("../utils");
+import {sendSuccessMessage, sendFailMessage} from "../utils";
 const saltRounds = 10;
 dotenv.config();
 
 class AuthController {
-  resolveLogin(req, res) {
+  resolveLogin(req: Request, res: Response) {
     const data = res.locals.tokenPayload;
 
-    const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_JWT_KEY, {
+    const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_JWT_KEY || "", {
       expiresIn: EXPIRES_TIME,
     });
-    const refToken = jwt.sign(data, process.env.REFRESH_TOKEN_JWT_KEY, {
+
+    const refToken = jwt.sign(data, process.env.REFRESH_TOKEN_JWT_KEY || "", {
       expiresIn: EXPIRES_TIME_REFRESH,
     });
     res.send({accessToken, status: "success", refToken, id:data.id });
   }
-  async refresh(req, res, next) {
+  async refresh(req: Request, res: Response, next: NextFunction) {
     const {refreshToken} = req.body;
     if (!refreshToken) {
       return res.status(401).send({
@@ -36,21 +38,21 @@ class AuthController {
     try {
       const user = await jwt.verify(
         refreshToken,
-        process.env.REFRESH_TOKEN_JWT_KEY
+        process.env.REFRESH_TOKEN_JWT_KEY || ""
       );
       const {email} = user;
       console.log('user :', user);
       const userInfo = await UserModel.findOne({email});
       const token = jwt.sign(
         {id: userInfo._id, email},
-        process.env.ACCESS_TOKEN_JWT_KEY,
+        process.env.ACCESS_TOKEN_JWT_KEY || "",
         {
           expiresIn: EXPIRES_TIME,
         }
       );
       const newRefreshToken = jwt.sign(
         {id: userInfo._id, email},
-        process.env.REFRESH_TOKEN_JWT_KEY,
+        process.env.REFRESH_TOKEN_JWT_KEY || "",
         {
           expiresIn: EXPIRES_TIME_REFRESH,
         }
@@ -70,7 +72,7 @@ class AuthController {
     }
   }
 
-  register(req, res) {
+  register(req: Request, res: Response) {
     const received = req.body;
     bcrypt.genSalt(saltRounds, function (err, salt) {
       bcrypt.hash(received.password, salt).then((hash) => {
@@ -138,7 +140,7 @@ class AuthController {
     });
   }
 
-  forgotPW(req, res) {
+  forgotPW(req: Request, res: Response) {
     const {username} = req.body;
     UserModel.findOne({username: username}).then((data) => {
       if (!data) res.status(200).send(sendFailMessage("User not found"));
@@ -193,7 +195,7 @@ class AuthController {
     });
   }
 
-  reset(req, res) {
+  reset(req: Request, res: Response) {
     const newPassword = req.body.newPassword;
     const username = res.locals.username;
     if (newPassword && typeof newPassword == "string") {
@@ -215,7 +217,7 @@ class AuthController {
     }
   }
 
-  test(req, res) {
+  test(req: Request, res: Response) {
     UserModel.find({}).then((users) => {
       res.send(users);
     });

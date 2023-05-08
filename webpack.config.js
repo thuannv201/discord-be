@@ -10,7 +10,6 @@ module.exports = {
     },
     resolve: {
         alias: {
-            "@": path.resolve(__dirname, "src"),
             "@controller": path.resolve(__dirname, "src/controller"),
             "@model": path.resolve(__dirname, "src/model"),
             "@routes": path.resolve(__dirname, "src/routes"),

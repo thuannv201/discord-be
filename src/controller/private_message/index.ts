@@ -1,17 +1,18 @@
-const {sendSuccessMessage, sendFailMessage} = require("../../utils");
-const Conversation = require("../../models/conversations/conversation");
-const Message = require("../../models/conversations/messages");
+import {Request, Response} from "express";
+import {sendSuccessMessage, sendFailMessage} from "../../utils";
+import Conversation from "../../models/conversations/conversation";
+import Message from "../../models/conversations/messages";
 
 class ConversationController {
-  createConversation(req, res) {
+  createConversation(req: Request, res: Response) {
     const received = req.body;
     Conversation.findOne({recipients: {$all: [...received?.recipientIds]}})
       .then((data) => {
         if (data) {
           res.send(
             sendSuccessMessage("success find", {
-              ...data._doc,
-              id: data._doc._id,
+              // ...data._doc,
+              // id: data._doc._id,
             })
           );
         } else {
@@ -19,8 +20,8 @@ class ConversationController {
             .then((data) => {
               res.send(
                 sendSuccessMessage("success create", {
-                  ...data._doc,
-                  id: data._doc._id,
+                  // ...data._doc,
+                  // id: data._doc._id,
                 })
               );
             })
@@ -34,7 +35,7 @@ class ConversationController {
       });
   }
 
-  saveMessage(req, res) {
+  saveMessage(req: Request, res: Response) {
     const received = req.body;
     Message.create({...received}).then((data) => {
       res.send(
@@ -45,7 +46,7 @@ class ConversationController {
     });
   }
 
-  getMessages(req, res) {
+  getMessages(req: Request, res: Response) {
     Message.find({conversationId: req.body?.conversationId}).then((data) => {
       console.log("data", data);
       res.send(
