@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import logger from "../logger/logger";
+import logger from "../logger";
 
 dotenv.config();
 const USERNAME = process.env.USERNAME || "";

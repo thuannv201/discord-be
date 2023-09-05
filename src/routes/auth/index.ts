@@ -1,5 +1,5 @@
 import express from "express";
-import authController from "@controller/authen";
+import authController from "@controller/authentication";
 import {
     verifyToken,
     verifyUser,

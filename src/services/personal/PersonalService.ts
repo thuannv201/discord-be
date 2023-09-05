@@ -4,7 +4,7 @@ import UserRequest from "../../models/user/requestUser";
 import { sendSuccessMessage, sendFailMessage } from "../../utils";
 import UserSpecial from "../../models/user/userSpecial";
 import conversation from "../../models/conversations/conversation";
-import logger from "../../logger/logger";
+import logger from "../../logger";
 
 class PersonalService {
     /**

@@ -8,18 +8,18 @@
         "@model": "src/model",
         "@routes": "src/routes",
         "@services": "src/services",
-        "@utils": "src/utils"
+        "@utils": "src/utils",
+        "@logger": "src/logger"
     },
     "_moduleDirectories": [
         "node_modules_custom"
     ],
-    "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node dist/server.js",
         "build": "npx tsc",
         "dict": "npx tsc -p .",
-        "dev": "nodemon -r module-alias/register -r esm src/server.ts"
+        "dev": "nodemon --exec \"ts-node-esm src/server.ts\" --watch src --ext ts"
     },
     "author": "",
     "license": "ISC",
@@ -46,7 +46,7 @@
         "@types/node": "^18.16.3",
         "@types/nodemailer": "^6.4.7",
         "@types/nodemailer-express-handlebars": "^4.0.2",
-        "nodemon": "^2.0.22",
+        "nodemon": "^3.0.1",
         "ts-node": "^10.9.1",
         "typescript": "^5.0.4"
     }

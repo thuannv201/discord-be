@@ -1,4 +1,4 @@
-import "module-alias/register";
+import "module-alias/register.js";
 import express, { Express } from "express";
 import { routes } from "./routes";
 import cors from "cors";
@@ -9,7 +9,7 @@ import {
     ServerToClientEvents,
     SocketData,
 } from "./payload/SocketIoPayload";
-import logger from "./logger/logger";
+import logger from "./logger";
 
 const PORT = process.env.PORT || 1280;
 const app: Express = express();

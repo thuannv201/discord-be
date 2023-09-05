@@ -1,5 +1,5 @@
 import express from "express";
-import PesonalControllers from "../../controller/user/PersonalController";
+import PesonalControllers from "../../controller/user";
 const router = express.Router();
 const personal = new PesonalControllers();
 router.get("/friends", personal.getListFriend);

@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import UserModel from "../models/user/userModels";
-import UserDetailModel from "../models/user/userDetail";
-import UserSpec from "../models/user/userSpecial";
+import UserModel from "../../models/user/userModels";
+import UserDetailModel from "../../models/user/userDetail";
+import UserSpec from "../../models/user/userSpecial";
 import bcrypt from "bcrypt";
 import hbs from "nodemailer-express-handlebars";
 import nodemailer from "nodemailer";
@@ -10,11 +10,11 @@ import path from "path";
 import { Request, Response, NextFunction } from "express";
 const EXPIRES_TIME = "10m";
 const EXPIRES_TIME_REFRESH = "30m";
-import { sendSuccessMessage, sendFailMessage } from "../utils";
+import { sendSuccessMessage, sendFailMessage } from "../../utils";
 const saltRounds = 10;
 dotenv.config();
 
-export default class AuthController {
+class AuthController {
     resolveLogin(req: Request, res: Response) {
         const data = res.locals.tokenPayload;
 
@@ -48,7 +48,6 @@ export default class AuthController {
                 process.env.REFRESH_TOKEN_JWT_KEY || ""
             );
             const { email } = user;
-            console.log("user :", user);
             const userInfo = await UserModel.findOne({ email });
             const token = jwt.sign(
                 { id: userInfo._id, email },
@@ -249,3 +248,5 @@ export default class AuthController {
         });
     }
 }
+
+export default new AuthController();
