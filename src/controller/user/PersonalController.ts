@@ -4,7 +4,7 @@ import { sendSuccessMessage, sendFailMessage } from "../../utils";
 import conversation from "../../models/conversations/conversation";
 import PersonalService from "../../services/personal/PersonalService";
 
-class PersonalController {
+export default class PersonalController {
     /**
      * get personal data
      * @param req
@@ -100,5 +100,3 @@ class PersonalController {
             });
     }
 }
-
-module.exports = new PersonalController();

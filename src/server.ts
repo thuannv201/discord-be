@@ -1,4 +1,6 @@
-import express, { Express, Request, Response } from "express";
+import "module-alias/register";
+import express, { Express } from "express";
+import { routes } from "./routes";
 import cors from "cors";
 import { Server } from "socket.io";
 import {
@@ -25,6 +27,8 @@ app.use(
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/chat.html");
 });
+
+routes(app);
 
 // Socket.IO server
 const io = new Server<

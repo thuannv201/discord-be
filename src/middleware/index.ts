@@ -86,9 +86,4 @@ function verifyTokenResetPw(req: Request, res: Response, next: NextFunction) {
     });
 }
 
-module.exports = {
-    verifyToken,
-    verifyUser,
-    validateUsername,
-    verifyTokenResetPw,
-};
+export { verifyToken, verifyUser, validateUsername, verifyTokenResetPw };
