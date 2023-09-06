@@ -1,17 +1,18 @@
 import express from "express";
-import authController from "@controller/authentication";
+import AuthController from "@controller/authentication";
 import {
-    verifyToken,
     verifyUser,
     validateUsername,
     verifyTokenResetPw,
-} from "../../middleware";
+} from "@middleware/index";
+
 const router = express.Router();
-router.post("/forgotPassword", authController.forgotPW);
-router.get("/test", authController.test);
-router.post("/login", verifyUser, authController.resolveLogin);
-router.post("/refreshToken", authController.refresh);
-router.post("/register", validateUsername, authController.register);
-router.post("/reset", verifyTokenResetPw, authController.reset);
+
+router.post("/forgotPassword", AuthController.forgotPW);
+router.get("/test", AuthController.test);
+router.post("/login", verifyUser, AuthController.resolveLogin);
+router.post("/refreshToken", AuthController.refresh);
+router.post("/register", validateUsername, AuthController.register);
+router.post("/reset", verifyTokenResetPw, AuthController.reset);
 
 export default router;

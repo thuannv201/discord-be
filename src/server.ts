@@ -11,7 +11,7 @@ import {
 } from "./payload/SocketIoPayload";
 import logger from "./logger";
 
-const PORT = process.env.PORT || 1280;
+const PORT = process.env.PORT || 5508;
 const app: Express = express();
 app.use(
     cors({
@@ -23,10 +23,6 @@ app.use(
     express.json(),
     express.urlencoded({ extended: true })
 ).options("*", cors());
-
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/chat.html");
-});
 
 routes(app);
 
@@ -68,5 +64,5 @@ io.on("connection", (socket) => {
 // start our server
 
 app.listen(PORT, () => {
-    logger.info(`⚡️[server]: Server is running at https://localhost:${PORT}`);
+    logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });

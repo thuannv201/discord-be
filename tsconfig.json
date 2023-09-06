@@ -21,7 +21,8 @@
             "@routes/*": ["routes/*"],
             "@services/*": ["services/*"],
             "@utils/*": ["utils/*"],
-            "@logger/*": ["logger/*"]
+            "@logger/*": ["logger/*"],
+            "@middleware/*": ["middleware/*"]
         }
     }
 }

@@ -1,38 +1,34 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import UserModel from "../../models/user/userModels";
+import UserModel, { IUserModel } from "../../models/user/userModels";
 import UserDetailModel from "../../models/user/userDetail";
 import UserSpec from "../../models/user/userSpecial";
 import bcrypt from "bcrypt";
-import hbs from "nodemailer-express-handlebars";
+import hbs, {
+    NodemailerExpressHandlebarsOptions,
+} from "nodemailer-express-handlebars";
 import nodemailer from "nodemailer";
 import path from "path";
 import { Request, Response, NextFunction } from "express";
-const EXPIRES_TIME = "10m";
-const EXPIRES_TIME_REFRESH = "30m";
 import { sendSuccessMessage, sendFailMessage } from "../../utils";
-const saltRounds = 10;
-dotenv.config();
+import { JwtPayload } from "./types";
+import {
+    ACCESS_TOKEN_JWT_KEY,
+    EXPIRES_TIME_REFRESH_TOKEN,
+    EXPIRES_TIME_TOKEN,
+    FPW_TOKEN_JWT_KEY,
+    REFRESH_TOKEN_JWT_KEY,
+    saltRounds,
+} from "./contants";
 
 class AuthController {
     resolveLogin(req: Request, res: Response) {
         const data = res.locals.tokenPayload;
-
-        const accessToken = jwt.sign(
-            data,
-            process.env.ACCESS_TOKEN_JWT_KEY || "",
-            {
-                expiresIn: EXPIRES_TIME,
-            }
-        );
-
-        const refToken = jwt.sign(
-            data,
-            process.env.REFRESH_TOKEN_JWT_KEY || "",
-            {
-                expiresIn: EXPIRES_TIME_REFRESH,
-            }
-        );
+        const accessToken = jwt.sign(data, ACCESS_TOKEN_JWT_KEY, {
+            expiresIn: EXPIRES_TIME_TOKEN,
+        });
+        const refToken = jwt.sign(data, REFRESH_TOKEN_JWT_KEY, {
+            expiresIn: EXPIRES_TIME_REFRESH_TOKEN,
+        });
         res.send({ accessToken, status: "success", refToken, id: data.id });
     }
     async refresh(req: Request, res: Response, next: NextFunction) {
@@ -43,34 +39,33 @@ class AuthController {
             });
         }
         try {
-            const user = await jwt.verify(
+            const user = (await jwt.verify(
                 refreshToken,
-                process.env.REFRESH_TOKEN_JWT_KEY || ""
-            );
+                REFRESH_TOKEN_JWT_KEY
+            )) as JwtPayload;
             const { email } = user;
-            const userInfo = await UserModel.findOne({ email });
+            const userInfo = (await UserModel.findOne({ email })) as IUserModel;
+            if (!userInfo) return;
             const token = jwt.sign(
                 { id: userInfo._id, email },
-                process.env.ACCESS_TOKEN_JWT_KEY || "",
+                ACCESS_TOKEN_JWT_KEY,
                 {
-                    expiresIn: EXPIRES_TIME,
+                    expiresIn: EXPIRES_TIME_TOKEN,
                 }
             );
             const newRefreshToken = jwt.sign(
                 { id: userInfo._id, email },
-                process.env.REFRESH_TOKEN_JWT_KEY || "",
+                REFRESH_TOKEN_JWT_KEY,
                 {
-                    expiresIn: EXPIRES_TIME_REFRESH,
+                    expiresIn: EXPIRES_TIME_REFRESH_TOKEN,
                 }
             );
-            userInfo.token = token;
-            userInfo.refreshToken = newRefreshToken;
             // user
             return res.status(200).send({
                 email: userInfo.email,
-                userId: userInfo.userId,
-                accessToken: userInfo.token,
-                refToken: userInfo.refreshToken,
+                userId: userInfo._id,
+                accessToken: token,
+                refToken: newRefreshToken,
             });
         } catch (error) {
             console.log("error :", error);
@@ -100,9 +95,9 @@ class AuthController {
                                             username: data.username,
                                             email: data.email,
                                         },
-                                        process.env.ACCESS_TOKEN_JWT_KEY,
+                                        ACCESS_TOKEN_JWT_KEY,
                                         {
-                                            expiresIn: EXPIRES_TIME,
+                                            expiresIn: EXPIRES_TIME_TOKEN,
                                         }
                                     );
                                     const refToken = jwt.sign(
@@ -110,9 +105,10 @@ class AuthController {
                                             username: data.username,
                                             email: data.email,
                                         },
-                                        process.env.REFRESH_TOKEN_JWT_KEY,
+                                        REFRESH_TOKEN_JWT_KEY,
                                         {
-                                            expiresIn: EXPIRES_TIME_REFRESH,
+                                            expiresIn:
+                                                EXPIRES_TIME_REFRESH_TOKEN,
                                         }
                                     );
                                     res.send(
@@ -135,9 +131,9 @@ class AuthController {
                     })
                     .catch((err) => {
                         if (err.name === "ValidationError") {
-                            let errors = {};
+                            let errors: any = {};
 
-                            Object.keys(err.errors).forEach((key) => {
+                            Object.keys(err.errors).forEach((key: string) => {
                                 errors[key] = err.errors[key].message;
                             });
 
@@ -162,57 +158,57 @@ class AuthController {
     forgotPW(req: Request, res: Response) {
         const { username } = req.body;
         UserModel.findOne({ username: username }).then((data) => {
-            if (!data) res.status(200).send(sendFailMessage("User not found"));
-            if (data) {
-                //generate token for 10 minutes
-                const username1 = data.username;
-                const resetPwToken = jwt.sign(
-                    { username: username1 },
-                    process.env.FPW_TOKEN_JWT_KEY,
-                    {
-                        expiresIn: "15m",
-                    }
-                );
-                // setup nodemailer + handlebars
-                const transporter = nodemailer.createTransport({
-                    service: "gmail",
-                    auth: {
-                        user: "hoc17112001@gmail.com",
-                        pass: "xhspunxznenckraq",
-                    },
-                });
-                const handlebarOptions = {
-                    viewEngine: {
-                        partialsDir: path.resolve("./views/"),
-                        defaultLayout: false,
-                    },
-                    viewPath: path.resolve("./views/"),
-                };
+            if (!data)
+                return res.status(200).send(sendFailMessage("User not found"));
 
-                transporter.use("compile", hbs(handlebarOptions));
-                const mailOptions = {
-                    from: '"Discord fake" <hoc17112001@gmail.com>', // sender address
-                    to: data.email, // list of receivers
-                    subject: "Forgot Password!",
-                    template: "emailForgotPw", // the name of the template file i.e email.handlebars
-                    context: {
-                        username: data.username, // replace {{name}} with Adebola
-                        link: `http://localhost:6508/auth/reset?token=${resetPwToken}`, // replace {{company}} with My Company
-                    },
-                };
-                transporter.sendMail(mailOptions, function (error, info) {
-                    if (error) {
-                        return console.log(error);
-                    } else {
-                        console.log("Message sent: " + info.response);
-                        res.send(
-                            sendSuccessMessage(
-                                "Email sent. Please check your message"
-                            )
-                        );
-                    }
-                });
-            }
+            //generate token for 10 minutes
+            const username1 = data.username;
+            const resetPwToken = jwt.sign(
+                { username: username1 },
+                FPW_TOKEN_JWT_KEY,
+                {
+                    expiresIn: "15m",
+                }
+            );
+            // setup nodemailer + handlebars
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: "hoc17112001@gmail.com",
+                    pass: "xhspunxznenckraq",
+                },
+            });
+            const handlebarOptions: NodemailerExpressHandlebarsOptions = {
+                viewEngine: {
+                    partialsDir: path.resolve("./views/"),
+                    // defaultLayout: false,
+                },
+                viewPath: path.resolve("./views/"),
+            };
+
+            transporter.use("compile", hbs(handlebarOptions));
+            const mailOptions = {
+                from: '"Discord fake" <hoc17112001@gmail.com>', // sender address
+                to: data.email, // list of receivers
+                subject: "Forgot Password!",
+                template: "emailForgotPw", // the name of the template file i.e email.handlebars
+                context: {
+                    username: data.username, // replace {{name}} with Adebola
+                    link: `http://localhost:6508/auth/reset?token=${resetPwToken}`, // replace {{company}} with My Company
+                },
+            };
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    return console.log(error);
+                } else {
+                    console.log("Message sent: " + info.response);
+                    res.send(
+                        sendSuccessMessage(
+                            "Email sent. Please check your message"
+                        )
+                    );
+                }
+            });
         });
     }
 
@@ -230,9 +226,11 @@ class AuthController {
                             res.send(sendSuccessMessage("Password changed!"));
                         })
                         .catch((err) => {
-                            res.status(201).sendFailMessage(
-                                "Unknown Error while reset password",
-                                err
+                            res.status(201).send(
+                                sendFailMessage(
+                                    "Unknown Error while reset password",
+                                    err
+                                )
                             );
                         });
                 });
@@ -243,9 +241,8 @@ class AuthController {
     }
 
     test(req: Request, res: Response) {
-        UserModel.find({}).then((users) => {
-            res.send(users);
-        });
+        console.log("asdkahdjkaaklsdjasjkdahsdjkashdasjkdahjk");
+        res.json("asjkdhadja");
     }
 }
 

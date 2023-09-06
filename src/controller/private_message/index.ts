@@ -3,7 +3,7 @@ import { sendSuccessMessage, sendFailMessage } from "../../utils";
 import Conversation from "../../models/conversations/conversation";
 import Message from "../../models/conversations/messages";
 
-export default class ConversationController {
+class ConversationController {
     createConversation(req: Request, res: Response) {
         const received = req.body;
         Conversation.findOne({
@@ -63,3 +63,5 @@ export default class ConversationController {
         );
     }
 }
+
+export default new ConversationController();
