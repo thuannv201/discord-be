@@ -10,6 +10,7 @@ import {
     SocketData,
 } from "./payload/SocketIoPayload";
 import logger from "./logger";
+import connectDb from "./config/config";
 
 const PORT = process.env.PORT || 5508;
 const app: Express = express();
@@ -24,6 +25,10 @@ app.use(
     express.urlencoded({ extended: true })
 ).options("*", cors());
 
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/chat.html");
+});
+
 routes(app);
 
 // Socket.IO server
@@ -34,35 +39,9 @@ const io = new Server<
     SocketData
 >();
 
-io.on("connection", (socket) => {
-    socket.on(
-        "chat_message",
-        (content, attachments, conversationId, authorId) => {
-            if (conversationId) {
-                console.log("conversationId", conversationId);
-            }
-        }
-    );
-
-    socket.on("join_conversation", (conversationId) => {
-        socket.join(conversationId);
-    });
-
-    socket.on("receive_request_friend", (requestor) => {
-        console.log("requestor :", requestor);
-    });
-
-    socket.on("send_request_friend", (requestor, to) => {});
-
-    socket.on("accept_request_user", (requestor, to) => {
-        Promise.all([]).then((values) => {
-            socket.to(to).to(requestor).emit("request_accepted");
-        });
-    });
-});
-
 // start our server
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await connectDb();
     logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });
