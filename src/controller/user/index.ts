@@ -1,35 +1,30 @@
-const UserModel = require("../../models/user/userModels");
-const UserRequest = require("../../models/user/requestUser");
-const {sendSuccessMessage, sendFailMessage} = require("../../utils");
-const UserSpecial = require("../../models/user/userSpecial");
-const conversation = require("../../models/conversations/conversation");
+import { Request, Response, NextFunction } from "express";
+import _ from "lodash";
+import { sendSuccessMessage, sendFailMessage } from "../../utils";
+import conversation from "../../models/conversations/conversation";
+import PersonalService from "../../services/personal/PersonalService";
 
 class PersonalController {
-  getPersonalData(req, res) {
-    try {
-      if (req?.query?.id) {
-        console.log("req?.query?.id :", req?.query?.id);
-        UserModel.findOne({_id: req.query.id})
-          .populate("details")
-          .populate("servers")
-          .exec((err, data) => {
-            console.log("err :", err);
-            if (err) {
-              res.status(201).send(sendFailMessage("fail", {err: err}));
+    /**
+     * get personal data
+     * @param req
+     * @param res
+     * @returns Response
+     */
+    getPersonalData(req: Request, res: Response) {
+        try {
+            if (req?.query?.id) {
+                const id = _.toNumber(req.query.id);
+                PersonalService.getPersonalData(id);
+            } else {
+                res.status(201).send(sendFailMessage("id is required"));
             }
-            if (data) {
-              res.send(sendSuccessMessage("Success", {personal: data}));
-            }
-          });
-      } else {
-        res.status(201).send(sendFailMessage("id is required"));
-      }
-    } catch (err) {
-      res.status(201).send(sendFailMessage("failed occurred", err));
+        } catch (err) {
+            res.status(201).send(sendFailMessage("failed occurred", err));
+        }
     }
-  }
-  getReceivedListRequest(req, res) {
-    try {
+    getReceivedListRequest(req: Request, res: Response) {
+        /*try {
       if (req?.query?.id) {
         UserRequest.find({to: req.query.id})
           .populate("requestor")
@@ -46,10 +41,10 @@ class PersonalController {
       }
     } catch (e) {
       res.status(201).send(sendFailMessage("failed occurred", err));
+    }*/
     }
-  }
-  getOwnListRequest(req, res) {
-    try {
+    getOwnListRequest(req: Request, res: Response) {
+        /*try {
       if (req?.query?.id) {
         UserRequest.find({requestor: req.query.id})
           .populate("to")
@@ -66,11 +61,11 @@ class PersonalController {
       }
     } catch (e) {
       res.status(201).send(sendFailMessage("failed occurred", err));
+    }*/
     }
-  }
 
-  getListFriend(req, res) {
-    try {
+    getListFriend(req: Request, res: Response) {
+        /*try {
       UserSpecial.find({id: req.query.id})
         .populate({
           path: "specialList",
@@ -89,19 +84,21 @@ class PersonalController {
               .send(sendSuccessMessage("find success", {err: err}));
           }
         });
-    } catch (e) {}
-  }
+    } catch (e) {}*/
+    }
 
-  getListDirectMessage(req, res) {
-    conversation
-      .find({recipients: {$in: [req.query.id]}})
-      .then((data) => {
-        res.send(sendSuccessMessage("find success", {data: data}));
-      })
-      .catch((err) => {
-        res.status(201).send(sendFailMessage("failed occurred!", {err: err}));
-      });
-  }
+    getListDirectMessage(req: Request, res: Response) {
+        conversation
+            .find({ recipients: { $in: [req.query.id] } })
+            .then((data) => {
+                res.send(sendSuccessMessage("find success", { data: data }));
+            })
+            .catch((err) => {
+                res.status(201).send(
+                    sendFailMessage("failed occurred!", { err: err })
+                );
+            });
+    }
 }
 
-module.exports = new PersonalController();
+export default new PersonalController();
