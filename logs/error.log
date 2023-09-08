@@ -2,3 +2,9 @@
 2023-09-07 03:41:15 [logger] [31merror[39m: connect failure querySrv ENODATA _mongodb._tcp."vcohanee.d7xfkcx";.mongodb.net
 2023-09-07 03:44:09 [logger] [31merror[39m: connect failure querySrv ENODATA _mongodb._tcp."discordclusterdb.rxkzlhy";.mongodb.net
 2023-09-07 03:58:09 [logger] [31merror[39m: connect failure bad auth : authentication failed
+2023-09-07 05:51:39 [logger] [31merror[39m: Cast to ObjectId failed for value "NaN" (type number) at path "_id" for model "Users"
+2023-09-07 05:55:54 [logger] [31merror[39m: Schema hasn't been registered for model "User_detail".
+Use mongoose.model(name, schema)
+2023-09-07 05:57:52 [logger] [31merror[39m: Schema hasn't been registered for model "Servers".
+Use mongoose.model(name, schema)
+2023-09-09 03:05:32 [logger] [31merror[39m: connect DB failure querySrv ESERVFAIL _mongodb._tcp.discordcluster.v5xnmd6.mongodb.net

@@ -11,11 +11,13 @@ class PersonalController {
      * @param res
      * @returns Response
      */
-    getPersonalData(req: Request, res: Response) {
+    async getPersonalData(req: Request, res: Response) {
         try {
             if (req?.query?.id) {
-                const id = _.toNumber(req.query.id);
-                PersonalService.getPersonalData(id);
+                const response = await PersonalService.getPersonalData(
+                    req.query.id as string
+                );
+                return res.send(response);
             } else {
                 res.status(201).send(sendFailMessage("id is required"));
             }

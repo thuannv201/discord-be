@@ -12,11 +12,11 @@ class PersonalService {
      * @param id : number
      * @returns Response
      */
-    async getPersonalData(id: number): Promise<any> {
+    async getPersonalData(id: string): Promise<any> {
         try {
             const user = await User.findOne({ _id: id })
                 .populate("details")
-                .populate("servers")
+                // .populate("Servers")
                 .exec();
             return user;
         } catch (err) {

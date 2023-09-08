@@ -31,13 +31,13 @@ class AuthController {
         });
         res.send({ accessToken, status: "success", refToken, id: data.id });
     }
-    async refresh(req: Request, res: Response, next: NextFunction) {
+    async refresh(req: Request, res: Response) {
         const { refreshToken } = req.body;
-        if (!refreshToken) {
+        if (!refreshToken)
             return res.status(401).send({
                 errors: [{ msg: "Refresh token not found" }],
             });
-        }
+
         try {
             const user = (await jwt.verify(
                 refreshToken,
@@ -45,7 +45,7 @@ class AuthController {
             )) as JwtPayload;
             const { email } = user;
             const userInfo = (await UserModel.findOne({ email })) as IUserModel;
-            if (!userInfo) return;
+            if (!userInfo) throw new Error("Cannot find user");
             const token = jwt.sign(
                 { id: userInfo._id, email },
                 ACCESS_TOKEN_JWT_KEY,
@@ -61,7 +61,7 @@ class AuthController {
                 }
             );
             // user
-            return res.status(200).send({
+            return res.send({
                 email: userInfo.email,
                 userId: userInfo._id,
                 accessToken: token,
@@ -174,21 +174,21 @@ class AuthController {
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                    user: "hoc17112001@gmail.com",
-                    pass: "xhspunxznenckraq",
+                    user: "hochv2001@gmail.com",
+                    pass: "imfpxgoxdaubwtwj",
                 },
             });
             const handlebarOptions: NodemailerExpressHandlebarsOptions = {
                 viewEngine: {
-                    partialsDir: path.resolve("./views/"),
-                    // defaultLayout: false,
+                    partialsDir: path.resolve("./src/views/"),
+                    defaultLayout: false,
                 },
-                viewPath: path.resolve("./views/"),
+                viewPath: path.resolve("./src/views/"),
             };
 
             transporter.use("compile", hbs(handlebarOptions));
             const mailOptions = {
-                from: '"Discord fake" <hoc17112001@gmail.com>', // sender address
+                from: '"Discord fake" <hochv2001@gmail.com>', // sender address
                 to: data.email, // list of receivers
                 subject: "Forgot Password!",
                 template: "emailForgotPw", // the name of the template file i.e email.handlebars
