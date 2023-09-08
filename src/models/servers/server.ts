@@ -24,6 +24,6 @@ const ServerSchema = new Schema<IServerModel>(
     },
     { timestamps: true }
 );
-const Servers = model<IServerModel>("Servers", ServerSchema, "Servers");
+const Servers = model<IServerModel>("Servers", ServerSchema, "servers");
 
 export default Servers;

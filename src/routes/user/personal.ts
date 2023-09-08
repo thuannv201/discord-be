@@ -6,6 +6,6 @@ router.get("/requestReceived", PesonalControllers.getReceivedListRequest);
 router.get("/requestOwn", PesonalControllers.getOwnListRequest);
 router.get("/listDM", PesonalControllers.getListDirectMessage);
 // router.get("/listSpecialUsers", PesonalControllers.getListSpecialUsers);
-// router.get("/", PesonalControllers.getPesonalControllersData);
+router.get("/", PesonalControllers.getPersonalData);
 
 export default router;

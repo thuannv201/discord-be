@@ -57,7 +57,7 @@ const UserSchema = new Schema<IUserModel>(
         },
         details: {
             type: Schema.Types.ObjectId,
-            ref: "User_detail",
+            ref: "User_details",
         },
         servers: [
             {
