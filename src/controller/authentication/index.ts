@@ -1,9 +1,3 @@
-
-import hbs, {
-    NodemailerExpressHandlebarsOptions,
-} from "nodemailer-express-handlebars";
-import nodemailer from "nodemailer";
-import path from "path";
 import { Request, Response } from "express";
 import {
     sendSuccessMessage,
@@ -90,46 +84,9 @@ class AuthController {
                     refToken,
                 })
             );
-            // setup nodemailer + handlebars
-            const transporter = nodemailer.createTransport({
-                service: "gmail",
-                auth: {
-                    user: "hochv2001@gmail.com",
-                    pass: "imfpxgoxdaubwtwj",
-                },
-            });
-            const handlebarOptions: NodemailerExpressHandlebarsOptions = {
-                viewEngine: {
-                    partialsDir: path.resolve("./src/views/"),
-                    defaultLayout: false,
-                },
-                viewPath: path.resolve("./src/views/"),
-            };
-
-            transporter.use("compile", hbs(handlebarOptions));
-            const mailOptions = {
-                from: '"Discord fake" <hochv2001@gmail.com>', // sender address
-                to: data.email, // list of receivers
-                subject: "Forgot Password!",
-                template: "emailForgotPw", // the name of the template file i.e email.handlebars
-                context: {
-                    username: data.username, // replace {{name}} with Adebola
-                    link: `http://localhost:6508/auth/reset?token=${resetPwToken}`, // replace {{company}} with My Company
-                },
-            };
-            transporter.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    return console.log(error);
-                } else {
-                    console.log("Message sent: " + info.response);
-                    res.send(
-                        sendSuccessMessage(
-                            "Email sent. Please check your message"
-                        )
-                    );
-                }
-            });
-        });
+        } catch (err) {
+            res.status(400).send(sendFailMessage("Resgister failed!", err));
+        }
     }
 
     // reset(req: Request, res: Response) {
