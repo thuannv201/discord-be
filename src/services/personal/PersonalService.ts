@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import User from "../../models/user/userModels";
-import UserRequest from "../../models/user/requestUser";
+import User from "../../models/users/UserCredential";
 import { sendSuccessMessage, sendFailMessage } from "../../utils";
-import UserSpecial from "../../models/user/userSpecial";
 import conversation from "../../models/conversations/conversation";
 import logger from "../../logger";
 

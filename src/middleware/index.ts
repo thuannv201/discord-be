@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { sendFailMessage } from "../utils";
-import UserModel from "../models/user/userModels";
+import { comparePassword, sendFailMessage } from "@utils/index";
+import {
+    FindHashPasswordByUserId,
+    FindUserByEmail,
+} from "@services/auth/AuthService";
 
 dotenv.config();
 
@@ -23,41 +25,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     } catch (err) {
         return res.status(401).send("Invalid Token");
     }
-};
-
-const verifyUser = (req: Request, res: Response, next: NextFunction) => {
-    const received = req.body;
-
-    UserModel.findOne({ username: received.username })
-        .then((data) => {
-            if (!data) {
-                res.status(404).json(sendFailMessage("User not found"));
-            }
-            if (data) {
-                bcrypt.compare(
-                    received.password,
-                    data.password,
-                    function (err, result) {
-                        if (result) {
-                            res.locals.tokenPayload = {
-                                username: data.username,
-                                updatedAt: data.updatedAt,
-                                email: data.email,
-                                id: data._id,
-                            };
-                            next();
-                        } else {
-                            res.status(201).json(
-                                sendFailMessage("Password incorrect")
-                            );
-                        }
-                    }
-                );
-            }
-        })
-        .catch((e) => {
-            res.status(201).json(sendFailMessage("Password incorrect", e));
-        });
 };
 
 function validateUsername(req: Request, res: Response, next: NextFunction) {
@@ -86,4 +53,4 @@ function verifyTokenResetPw(req: Request, res: Response, next: NextFunction) {
     });
 }
 
-export { verifyToken, verifyUser, validateUsername, verifyTokenResetPw };
+export { verifyToken, validateUsername, verifyTokenResetPw };

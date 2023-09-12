@@ -5,7 +5,7 @@
     "main": "dist/server.js",
     "_moduleAliases": {
         "@controller": "src/controller",
-        "@model": "src/model",
+        "@models": "src/models",
         "@routes": "src/routes",
         "@services": "src/services",
         "@utils": "src/utils",

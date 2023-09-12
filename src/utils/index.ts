@@ -1,4 +1,13 @@
-function sendFailMessage(
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import {
+    ACCESS_TOKEN_JWT_KEY,
+    EXPIRES_TIME_REFRESH_TOKEN,
+    EXPIRES_TIME_TOKEN,
+    REFRESH_TOKEN_JWT_KEY,
+} from "./contants";
+
+export function sendFailMessage(
     message: string = "",
     other: any = {},
     status: number | null = null,
@@ -24,7 +33,8 @@ function sendFailMessage(
             );
     }
 }
-function sendSuccessMessage(message: string = "", other: any = {}) {
+
+export function sendSuccessMessage(message: string = "", other: any = {}) {
     return Object.assign(
         {
             status: "success",
@@ -33,4 +43,43 @@ function sendSuccessMessage(message: string = "", other: any = {}) {
         other
     );
 }
-export { sendFailMessage, sendSuccessMessage };
+
+export async function hashPassword(plaintext_password: string) {
+    const saltRounds = 10;
+    const hashedPassword = await new Promise((resolve, reject) => {
+        bcrypt.hash(plaintext_password, saltRounds, function (err, hash) {
+            if (err) reject(err);
+            resolve(hash);
+        });
+    });
+
+    return hashedPassword;
+}
+
+export const signAccessToken = (data: object) => {
+    return jwt.sign(data, ACCESS_TOKEN_JWT_KEY, {
+        expiresIn: EXPIRES_TIME_TOKEN,
+    });
+};
+
+export const signRefreshToken = (data: object) => {
+    return jwt.sign(data, REFRESH_TOKEN_JWT_KEY, {
+        expiresIn: EXPIRES_TIME_REFRESH_TOKEN,
+    });
+};
+
+export const comparePassword = async (
+    plaintext_password: string,
+    hash_password: string
+) => {
+    const isCorrect = await new Promise((resolve, reject) => {
+        bcrypt.compare(
+            plaintext_password,
+            hash_password,
+            function (err, result) {
+                resolve(result);
+            }
+        );
+    });
+    return isCorrect;
+};

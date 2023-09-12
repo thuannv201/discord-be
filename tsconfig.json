@@ -17,7 +17,7 @@
         "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
         "paths": {
             "@controller/*": ["controller/*"],
-            "@model/*": ["model/*"],
+            "@models/*": ["models/*"],
             "@routes/*": ["routes/*"],
             "@services/*": ["services/*"],
             "@utils/*": ["utils/*"],
