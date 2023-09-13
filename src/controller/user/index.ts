@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import _ from "lodash";
 import { sendSuccessMessage, sendFailMessage } from "../../utils";
 import conversation from "../../models/conversations/conversation";
-import PersonalService from "../../services/personal/PersonalService";
+import PersonalService from "../../services/personal";
 
 class PersonalController {
     /**

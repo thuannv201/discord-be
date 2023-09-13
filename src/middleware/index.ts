@@ -1,25 +1,19 @@
 import { Request, Response, NextFunction } from "express";
-import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
-import { comparePassword, sendFailMessage } from "@utils/index";
+import { JwtPayload } from "jsonwebtoken";
 import {
-    FindHashPasswordByUserId,
-    FindUserByEmail,
-} from "@services/auth/AuthService";
+    sendFailMessage,
+    verifyAccessToken,
+    verifyRsPwToken,
+} from "@utils/index";
 
-dotenv.config();
-
-const ACCESS_TOKEN_JWT_KEY = process.env.ACCESS_TOKEN_JWT_KEY || "";
-const FPW_TOKEN_JWT_KEY = process.env.FPW_TOKEN_JWT_KEY || "";
-
-const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+const checkValidToken = (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers["authorization"]?.split(" ")?.[1];
 
     if (!token) {
         return res.status(403).send("A token is required for authentication");
     }
     try {
-        const decoded = jwt.verify(token, ACCESS_TOKEN_JWT_KEY);
+        const decoded = verifyAccessToken(token);
         req.body = decoded;
         next();
     } catch (err) {
@@ -27,7 +21,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-function validateUsername(req: Request, res: Response, next: NextFunction) {
+function checkValidUserName(req: Request, res: Response, next: NextFunction) {
     const { username } = req.body;
     const usernameRegex = /^[a-zA-Z0-9]+$/;
     const iUsernameValid = usernameRegex.test(username);
@@ -36,21 +30,23 @@ function validateUsername(req: Request, res: Response, next: NextFunction) {
     if (iUsernameValid) next();
 }
 
-function verifyTokenResetPw(req: Request, res: Response, next: NextFunction) {
-    const received = req.body;
-    const token = received.token;
-    if (!token) res.status(401).send(sendFailMessage("Token invalid"));
-    jwt.verify(token, FPW_TOKEN_JWT_KEY, (err: any, data: any) => {
-        if (err) {
-            console.log("err :", err);
-            res.status(201).send(sendFailMessage("Token invalid!", err));
-        }
-        if (data) {
-            console.log("data :", data);
-            res.locals.username = data.username;
-            next();
-        }
-    });
+function checkTokenResetPw(req: Request, res: Response, next: NextFunction) {
+    const { token } = req.body;
+    if (!token)
+        res.status(401).send(
+            sendFailMessage("The link has been invalid or expired!")
+        );
+    try {
+        const data = verifyRsPwToken(token) as JwtPayload;
+        console.log("data :", data);
+        res.locals.user_email = data.user_email;
+        next();
+    } catch (err) {
+        console.log("err :", err);
+        res.status(201).send(
+            sendFailMessage("The link has been invalid or expired!", err)
+        );
+    }
 }
 
-export { verifyToken, validateUsername, verifyTokenResetPw };
+export { checkValidToken, checkValidUserName, checkTokenResetPw };

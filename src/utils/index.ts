@@ -4,6 +4,7 @@ import {
     ACCESS_TOKEN_JWT_KEY,
     EXPIRES_TIME_REFRESH_TOKEN,
     EXPIRES_TIME_TOKEN,
+    FPW_TOKEN_JWT_KEY,
     REFRESH_TOKEN_JWT_KEY,
 } from "./contants";
 
@@ -56,6 +57,22 @@ export async function hashPassword(plaintext_password: string) {
     return hashedPassword;
 }
 
+export const comparePassword = async (
+    plaintext_password: string,
+    hash_password: string
+) => {
+    const isCorrect = await new Promise((resolve) => {
+        bcrypt.compare(
+            plaintext_password,
+            hash_password,
+            function (err, result) {
+                resolve(result);
+            }
+        );
+    });
+    return isCorrect;
+};
+
 export const signAccessToken = (data: object) => {
     return jwt.sign(data, ACCESS_TOKEN_JWT_KEY, {
         expiresIn: EXPIRES_TIME_TOKEN,
@@ -68,18 +85,20 @@ export const signRefreshToken = (data: object) => {
     });
 };
 
-export const comparePassword = async (
-    plaintext_password: string,
-    hash_password: string
-) => {
-    const isCorrect = await new Promise((resolve, reject) => {
-        bcrypt.compare(
-            plaintext_password,
-            hash_password,
-            function (err, result) {
-                resolve(result);
-            }
-        );
+export const signRsPwToken = (data: object) => {
+    return jwt.sign(data, FPW_TOKEN_JWT_KEY, {
+        expiresIn: "10m",
     });
-    return isCorrect;
+};
+
+export const verifyRefreshToken = (resfresh_token: string) => {
+    return jwt.verify(resfresh_token, REFRESH_TOKEN_JWT_KEY);
+};
+
+export const verifyAccessToken = (access_token: string) => {
+    return jwt.verify(access_token, ACCESS_TOKEN_JWT_KEY);
+};
+
+export const verifyRsPwToken = (rspw_token: string) => {
+    return jwt.verify(rspw_token, FPW_TOKEN_JWT_KEY);
 };
