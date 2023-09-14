@@ -22,7 +22,8 @@
             "@services/*": ["services/*"],
             "@utils/*": ["utils/*"],
             "@logger/*": ["logger/*"],
-            "@middleware/*": ["middleware/*"]
+            "@middleware/*": ["middleware/*"],
+            "@elastic-search/*": ["elasticsearch/*"]
         }
     }
 }

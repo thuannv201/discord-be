@@ -11,6 +11,7 @@ import {
 } from "./payload/SocketIoPayload";
 import logger from "./logger";
 import connectDb from "./config/config";
+import client from "@elastic-search/client";
 
 const PORT = process.env.PORT || 5508;
 const app: Express = express();
@@ -42,6 +43,8 @@ const io = new Server<
 // start our server
 
 app.listen(PORT, async () => {
+    const resp = await client.info();
+    logger.info("Connected to ElasticSearch Cloud Cluster");
     await connectDb();
     logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });

@@ -5,9 +5,9 @@ export interface IUserCredentials {
     user_id: Types.ObjectId;
 }
 
-export interface IUserCredentialModal extends IUserCredentials, Document {}
+interface IUserCredentialModal extends IUserCredentials, Document {}
 
-const UserSchema = new Schema<IUserCredentialModal>(
+const UserCredentialSchema = new Schema<IUserCredentialModal>(
     {
         hash_password: String,
         user_id: {
@@ -19,9 +19,10 @@ const UserSchema = new Schema<IUserCredentialModal>(
         timestamps: true,
     }
 );
+
 const UserCredentials = model<IUserCredentialModal>(
     "user_credentials",
-    UserSchema
+    UserCredentialSchema
 );
 
 export default UserCredentials;

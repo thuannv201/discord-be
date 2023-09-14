@@ -61,14 +61,15 @@ class AuthController {
             const received = req.body;
             const hash_password = await hashPassword(received.password);
             const createdUserInfo = await CreateUserInfo({
-                date_of_birth: received.birth,
-                user_name: received.username,
-                user_email: received.email,
+                date_of_birth: received.birth as Date,
+                user_name: received.username as string,
+                user_email: received.email as string,
                 first_name: "",
                 last_name: "",
                 phone_number: "",
                 user_address: "",
                 user_avatar: "",
+                full_name: "",
             });
             await CreateUserCredential({
                 hash_password: hash_password as string,

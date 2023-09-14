@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
-
+import { Schema, model, Document } from "mongoose";
+import esClient from "@elastic-search/client";
+import logger from "@logger/index";
 export interface IUserInfo {
     user_address: string;
     first_name: string;
@@ -8,16 +9,18 @@ export interface IUserInfo {
     user_avatar: string;
     phone_number: string;
     user_name: string;
+    full_name: string;
     user_email: string;
 }
 
-export interface IUserInfoModel extends IUserInfo, Document {}
+interface IUserInfoModel extends IUserInfo, Document {}
 
 const UserInfoSchema = new Schema<IUserInfoModel>(
     {
         user_address: { type: String, default: "" },
         first_name: { type: String, default: "" },
         last_name: { type: String, default: "" },
+        full_name: { type: String, default: "" },
         date_of_birth: { type: Date, default: null },
         user_avatar: { type: String, default: "" },
         phone_number: { type: String, default: "" },
@@ -50,6 +53,24 @@ const UserInfoSchema = new Schema<IUserInfoModel>(
     },
     { timestamps: true }
 );
+
+UserInfoSchema.post("save", async (doc) => {
+    const indexName = "user_info";
+    try {
+        await esClient.index({
+            index: indexName,
+            id: doc._id.toString(),
+            body: {
+                user_name: doc.user_name,
+                user_email: doc.user_email,
+                user: doc.user_name,
+            },
+        });
+        logger.info(`Sync and indexed ${indexName} to Elastic successfully!`);
+    } catch (error) {
+        console.error(`Error indexing ${indexName}:`, error);
+    }
+});
 
 const UserInfo = model<IUserInfoModel>("user_info", UserInfoSchema);
 
