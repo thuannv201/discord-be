@@ -60,10 +60,9 @@ UserInfoSchema.post("save", async (doc) => {
         await esClient.index({
             index: indexName,
             id: doc._id.toString(),
-            body: {
+            document: {
                 user_name: doc.user_name,
                 user_email: doc.user_email,
-                user: doc.user_name,
             },
         });
         logger.info(`Sync and indexed ${indexName} to Elastic successfully!`);
