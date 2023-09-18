@@ -4,23 +4,23 @@ import AuthServices from "@services/auth";
 
 class AuthController {
     async login(req: Request, res: Response) {
-        await AuthServices.loginService(req, res);
+        await AuthServices.login(req, res);
     }
 
     async register(req: Request, res: Response) {
-        await AuthServices.registerService(req, res);
+        await AuthServices.register(req, res);
     }
 
     async refreshToken(req: Request, res: Response) {
-        await AuthServices.refreshTokenService(req, res);
+        await AuthServices.refreshToken(req, res);
     }
 
     async forgotPw(req: Request, res: Response) {
-        await AuthServices.forgotPwService(req, res);
+        await AuthServices.forgotPw(req, res);
     }
 
     async resetPw(req: Request, res: Response) {
-        await AuthServices.resetPwService(req, res);
+        await AuthServices.resetPw(req, res);
     }
 }
 

@@ -1,11 +1,5 @@
 import { Request, Response } from "express";
-import {
-    changePasswordByEmail,
-    createUserCredential,
-    createUserInfo,
-    findHashPasswordByUserId,
-    findUserByEmail,
-} from "@api/auth";
+import AuthApis from "@api/auth";
 import {
     comparePassword,
     hashPassword,
@@ -22,18 +16,18 @@ import path from "path";
 import { emailSender } from "@services/common";
 
 class AuthServices {
-    async loginService(req: Request, res: Response) {
+    async login(req: Request, res: Response) {
         const received = req.body;
-        const user_info = await findUserByEmail(
-            received?.email || received?.username
-        );
+        const user_info = await AuthApis.findUserByEmail(received?.email);
 
         if (!user_info) {
             return res
                 .status(400)
                 .json(sendFailMessage("Email or password are not correct"));
         }
-        const user_credential = await findHashPasswordByUserId(user_info._id);
+        const user_credential = await AuthApis.findHashPasswordByUserId(
+            user_info._id
+        );
 
         const isPasswordCorrect = await comparePassword(
             received.password,
@@ -56,11 +50,11 @@ class AuthServices {
         res.send({ accessToken, status: "success", refToken, id: data.id });
     }
 
-    async registerService(req: Request, res: Response) {
+    async register(req: Request, res: Response) {
         try {
             const received = req.body;
             const hash_password = await hashPassword(received.password);
-            const createdUserInfo = await createUserInfo({
+            const createdUserInfo = await AuthApis.createUserInfo({
                 date_of_birth: received.birth as Date,
                 user_name: received.username as string,
                 user_email: received.email as string,
@@ -71,7 +65,7 @@ class AuthServices {
                 user_avatar: "",
                 full_name: "",
             });
-            await createUserCredential({
+            await AuthApis.createUserCredential({
                 hash_password: hash_password as string,
                 user_id: createdUserInfo._id,
             });
@@ -94,7 +88,7 @@ class AuthServices {
         }
     }
 
-    async refreshTokenService(req: Request, res: Response) {
+    async refreshToken(req: Request, res: Response) {
         const { refreshToken } = req.body;
         if (!refreshToken)
             return res.status(401).send({
@@ -104,7 +98,7 @@ class AuthServices {
         try {
             const user = verifyRefreshToken(refreshToken) as JwtPayload;
             const { email } = user;
-            const user_info = await findUserByEmail(email);
+            const user_info = await AuthApis.findUserByEmail(email);
             if (!user_info) throw new Error("Cannot find user");
             const newAccessToken = signAccessToken({
                 id: user_info._id,
@@ -126,9 +120,9 @@ class AuthServices {
         }
     }
 
-    async forgotPwService(req: Request, res: Response) {
+    async forgotPw(req: Request, res: Response) {
         const { user_email } = req.body;
-        const user_info = await findUserByEmail(user_email);
+        const user_info = await AuthApis.findUserByEmail(user_email);
         if (!user_info) {
             return res.status(200).send(sendFailMessage("User not found"));
         }
@@ -171,12 +165,15 @@ class AuthServices {
         return res.status(500).send(sendFailMessage("Send email failed"));
     }
 
-    async resetPwService(req: Request, res: Response) {
+    async resetPw(req: Request, res: Response) {
         try {
             const { newPassword } = req.body;
             const user_email = res.locals.user_email;
             const hash_password = (await hashPassword(newPassword)) as string;
-            const rs = await changePasswordByEmail(user_email, hash_password);
+            const rs = await AuthApis.changePasswordByEmail(
+                user_email,
+                hash_password
+            );
             res.send(sendSuccessMessage("Password has been changed"));
         } catch (err) {
             res.status(201).send(sendFailMessage("Reset password failed", err));
