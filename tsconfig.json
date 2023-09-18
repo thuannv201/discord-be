@@ -20,6 +20,7 @@
             "@models/*": ["models/*"],
             "@routes/*": ["routes/*"],
             "@services/*": ["services/*"],
+            "@api/*": ["api/*"],
             "@utils/*": ["utils/*"],
             "@logger/*": ["logger/*"],
             "@middleware/*": ["middleware/*"],

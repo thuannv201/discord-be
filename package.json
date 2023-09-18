@@ -8,6 +8,7 @@
         "@models": "src/models",
         "@routes": "src/routes",
         "@services": "src/services",
+        "@api": "src/api",
         "@utils": "src/utils",
         "@logger": "src/logger",
         "@middleware": "src/middleware",
