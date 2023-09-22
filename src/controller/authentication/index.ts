@@ -1,27 +1,25 @@
 import { Request, Response } from "express";
 
 import AuthServices from "@services/auth";
+import LoginService from "@services/auth/loginService";
+import RegisterService from "@services/auth/registerService";
 
-class AuthController {
-    async login(req: Request, res: Response) {
-        await AuthServices.login(req, res);
-    }
+export const login = async (req: Request, res: Response) => {
+    await LoginService.execute(req, res);
+};
 
-    async register(req: Request, res: Response) {
-        await AuthServices.register(req, res);
-    }
+export const register = async (req: Request, res: Response) => {
+    await RegisterService.execute(req, res);
+};
 
-    async refreshToken(req: Request, res: Response) {
-        await AuthServices.refreshToken(req, res);
-    }
+export const refreshToken = async (req: Request, res: Response) => {
+    await AuthServices.refreshToken(req, res);
+};
 
-    async forgotPw(req: Request, res: Response) {
-        await AuthServices.forgotPw(req, res);
-    }
+export const forgotPw = async (req: Request, res: Response) => {
+    await AuthServices.forgotPw(req, res);
+};
 
-    async resetPw(req: Request, res: Response) {
-        await AuthServices.resetPw(req, res);
-    }
-}
-
-export default new AuthController();
+export const resetPw = async (req: Request, res: Response) => {
+    await AuthServices.resetPw(req, res);
+};

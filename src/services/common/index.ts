@@ -2,6 +2,8 @@ import nodemailer from "nodemailer";
 import hbs, {
     NodemailerExpressHandlebarsOptions,
 } from "nodemailer-express-handlebars";
+
+export { BaseService } from "@services/common/baseService";
 interface Mail {
     from: string; // sender address
     to: string; // list of receivers

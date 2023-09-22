@@ -70,7 +70,7 @@ export const comparePassword = async (
             }
         );
     });
-    return isCorrect;
+    return !!isCorrect;
 };
 
 export const signAccessToken = (data: object) => {
@@ -101,4 +101,22 @@ export const verifyAccessToken = (access_token: string) => {
 
 export const verifyRsPwToken = (rspw_token: string) => {
     return jwt.verify(rspw_token, FPW_TOKEN_JWT_KEY);
+};
+
+export const signUserToken = (data: {
+    user_name: string;
+    user_email: string;
+}) => {
+    const accessToken = signAccessToken({
+        userName: data.user_name,
+        email: data.user_email,
+    });
+    const refreshToken = signRefreshToken({
+        userName: data.user_name,
+        email: data.user_email,
+    });
+    return {
+        accessToken,
+        refreshToken,
+    };
 };
