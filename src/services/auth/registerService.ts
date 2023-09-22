@@ -1,14 +1,9 @@
 import { BaseService } from "@services/common";
-import {
-    hashPassword,
-    sendFailMessage,
-    sendSuccessMessage,
-    signAccessToken,
-    signRefreshToken,
-    signUserToken,
-} from "@utils/index";
+import { hashPassword, signUserToken } from "@utils/index";
 import { Request, Response } from "express";
 import AuthApis from "@api/auth";
+import { IUserInfo } from "@models/users/UserInfo";
+import { IUserCredentials } from "@models/users/UserCredential";
 
 interface IRegisterResponse {
     accessToken: string;
@@ -21,25 +16,24 @@ class RegisterService extends BaseService {
         try {
             const received = req.body;
             const hash_password = await hashPassword(received.password);
-            const createdUserInfo = await AuthApis.createUserInfo({
+
+            const newUser: IUserInfo = {
                 date_of_birth: received.birth as Date,
                 user_name: received.username as string,
                 user_email: received.email as string,
-                first_name: "",
-                last_name: "",
-                phone_number: "",
-                user_address: "",
-                user_avatar: "",
-                full_name: "",
-            });
-            await AuthApis.createUserCredential({
+            };
+            const createdUserInfo = await AuthApis.createUserInfo(newUser);
+
+            const newUserCredential: IUserCredentials = {
                 hash_password: hash_password as string,
                 user_id: createdUserInfo._id,
-            });
+            };
+            await AuthApis.createUserCredential(newUserCredential);
 
             const data = {
                 user_name: createdUserInfo.user_name,
                 user_email: createdUserInfo.user_email,
+                userId: createdUserInfo._id,
             };
             const { accessToken, refreshToken } = signUserToken(data);
 

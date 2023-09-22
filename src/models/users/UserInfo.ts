@@ -2,14 +2,14 @@ import { Schema, model, Document } from "mongoose";
 import esClient from "@elastic-search/client";
 import logger from "@logger/index";
 export interface IUserInfo {
-    user_address: string;
-    first_name: string;
-    last_name: string;
-    date_of_birth: Date;
-    user_avatar: string;
-    phone_number: string;
+    user_address?: string;
+    first_name?: string;
+    last_name?: string;
+    date_of_birth?: Date;
+    user_avatar?: string;
+    phone_number?: string;
     user_name: string;
-    full_name: string;
+    full_name?: string;
     user_email: string;
 }
 
@@ -27,7 +27,6 @@ const UserInfoSchema = new Schema<IUserInfoModel>(
         user_name: {
             type: String,
             unique: true,
-            default: "",
             maxlength: 50,
             validate: {
                 validator: function (v: string) {

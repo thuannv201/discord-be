@@ -106,15 +106,10 @@ export const verifyRsPwToken = (rspw_token: string) => {
 export const signUserToken = (data: {
     user_name: string;
     user_email: string;
+    userId: string;
 }) => {
-    const accessToken = signAccessToken({
-        userName: data.user_name,
-        email: data.user_email,
-    });
-    const refreshToken = signRefreshToken({
-        userName: data.user_name,
-        email: data.user_email,
-    });
+    const accessToken = signAccessToken(data);
+    const refreshToken = signRefreshToken(data);
     return {
         accessToken,
         refreshToken,
