@@ -13,6 +13,7 @@ const validatePassword = async (
         plainTextPassword,
         hash_password
     );
+    console.log("isPasswordCorrect :", isPasswordCorrect);
     return callback(isPasswordCorrect);
 };
 
@@ -31,7 +32,7 @@ class LoginService extends BaseService {
             );
 
             const sendResponse = (isCorrectPassword: boolean) => {
-                if (isCorrectPassword) {
+                if (!isCorrectPassword) {
                     return this.fail(res, "Email or password are not correct");
                 }
 
@@ -54,6 +55,7 @@ class LoginService extends BaseService {
                 sendResponse
             );
         } catch (err: any) {
+            console.log("err :", err);
             this.fail(res, err);
         }
     }

@@ -19,16 +19,16 @@ class AuthApis {
     }
 
     async findUserByEmail(user_email: string) {
-        const searchResult = await esClient.search({
-            index: "user_info",
-            query: {
-                match_phrase_prefix: {
-                    //
-                    user_email: user_email,
-                },
-            },
-        });
-        console.log("searchResult :", searchResult.hits.hits);
+        // const searchResult = await esClient.search({
+        //     index: "user_info",
+        //     query: {
+        //         match_phrase_prefix: {
+        //             //
+        //             user_email: user_email,
+        //         },
+        //     },
+        // });
+        // console.log("searchResult :", searchResult.hits.hits);
         const data = await UserInfo.findOne({ user_email });
 
         return data;

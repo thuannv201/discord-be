@@ -43,8 +43,8 @@ const io = new Server<
 // start our server
 
 app.listen(PORT, async () => {
-    const resp = await client.info();
-    logger.info("Connected to ElasticSearch Cloud Cluster");
+    // const resp = await client.info();
+    // logger.info("Connected to ElasticSearch Cloud Cluster");
     await connectDb();
     logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });
