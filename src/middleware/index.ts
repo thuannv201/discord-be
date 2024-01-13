@@ -26,7 +26,7 @@ function checkValidUserName(req: Request, res: Response, next: NextFunction) {
     const usernameRegex = /^[a-zA-Z0-9]+$/;
     const iUsernameValid = usernameRegex.test(username);
     if (!iUsernameValid)
-        res.status(201).send(sendFailMessage("Username is not valid !"));
+        res.status(400).send(sendFailMessage("Username is not valid !"));
     if (iUsernameValid) next();
 }
 
