@@ -44,6 +44,7 @@ class RegisterService extends BaseService {
             });
         } catch (err: any) {
             this.fail(res, err);
+            console.log("object");
         }
     }
 }
