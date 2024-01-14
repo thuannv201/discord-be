@@ -8,3 +8,5 @@ Use mongoose.model(name, schema)
 2023-09-07 05:57:52 [logger] [31merror[39m: Schema hasn't been registered for model "Servers".
 Use mongoose.model(name, schema)
 2023-09-09 03:05:32 [logger] [31merror[39m: connect DB failure querySrv ESERVFAIL _mongodb._tcp.discordcluster.v5xnmd6.mongodb.net
+2024-01-13 23:27:24 [logger] [31merror[39m: Connect MonggoAtlas Cloud failure querySrv ENODATA _mongodb._tcp.discordcluster.v5xnmd6.mongodb.net
+2024-01-13 23:28:29 [logger] [31merror[39m: Connect MonggoAtlas Cloud failure querySrv ENODATA _mongodb._tcp.discordcluster.v5xnmd6.mongodb.net

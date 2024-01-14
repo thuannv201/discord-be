@@ -1,5 +1,5 @@
 import { BaseService } from "@services/common";
-import { hashPassword, signUserToken } from "@utils/index";
+import { genarateErrorCode, hashPassword, signUserToken } from "@utils/index";
 import { Request, Response } from "express";
 import AuthApis from "@api/auth";
 import { IUserInfo } from "@models/users/UserInfo";
@@ -43,8 +43,7 @@ class RegisterService extends BaseService {
                 userId: createdUserInfo._id,
             });
         } catch (err: any) {
-            this.fail(res, err);
-            console.log("object");
+            this.fail(res, genarateErrorCode(err));
         }
     }
 }

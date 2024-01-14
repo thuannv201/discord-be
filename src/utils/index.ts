@@ -7,6 +7,7 @@ import {
     FPW_TOKEN_JWT_KEY,
     REFRESH_TOKEN_JWT_KEY,
 } from "./contants";
+import { MongooseError } from "mongoose";
 
 export function sendFailMessage(
     message: string = "",
@@ -114,4 +115,11 @@ export const signUserToken = (data: {
         accessToken,
         refreshToken,
     };
+};
+
+export const genarateErrorCode = (error: any) => {
+    const errorCode: any = {
+        [11000]: "DUPLICATED",
+    };
+    return errorCode[error?.code] || error;
 };
