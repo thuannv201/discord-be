@@ -26,11 +26,11 @@ class RefreshTokenService extends BaseService {
 
             const { accessToken, refreshToken: newRefreshToken } =
                 signUserToken(tokenData);
+            res.cookie("accessToken", accessToken, { httpOnly: true });
+            res.cookie("refreshToken", newRefreshToken, { httpOnly: true });
 
             return this.ok<ITokenDTO>(res, {
-                refreshToken: newRefreshToken,
                 userId: user_info._id,
-                accessToken,
             });
         } catch (error: any) {
             return this.fail(res, error.message);

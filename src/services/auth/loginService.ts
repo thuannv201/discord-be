@@ -42,9 +42,9 @@ class LoginService extends BaseService {
                     userId: user_info._id,
                 };
                 const { accessToken, refreshToken } = signUserToken(data);
+                res.cookie("accessToken", accessToken, { httpOnly: true });
+                res.cookie("refreshToken", refreshToken, { httpOnly: true });
                 this.ok<ITokenDTO>(res, {
-                    accessToken,
-                    refreshToken,
                     userId: user_info._id,
                 });
             };

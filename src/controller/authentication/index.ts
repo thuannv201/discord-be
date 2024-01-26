@@ -13,6 +13,10 @@ export const register = async (req: Request, res: Response) => {
     await registerService.execute(req, res);
 };
 
+export const checkValidUser = async (req: Request, res: Response) => {
+    await registerService.checkValidUser(req, res);
+};
+
 export const refreshToken = async (req: Request, res: Response) => {
     await refreshTokenService.execute(req, res);
 };

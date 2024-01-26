@@ -56,14 +56,14 @@ const UserInfoSchema = new Schema<IUserInfoModel>(
 UserInfoSchema.post("save", async (doc) => {
     const indexName = "user_info";
     try {
-        await esClient.index({
-            index: indexName,
-            id: doc._id.toString(),
-            document: {
-                user_name: doc.user_name,
-                user_email: doc.user_email,
-            },
-        });
+        // await esClient.index({
+        //     index: indexName,
+        //     id: doc._id.toString(),
+        //     document: {
+        //         user_name: doc.user_name,
+        //         user_email: doc.user_email,
+        //     },
+        // });
         logger.info(`Sync and indexed ${indexName} to Elastic successfully!`);
     } catch (error) {
         console.error(`Error indexing ${indexName}:`, error);
