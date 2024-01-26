@@ -23,7 +23,7 @@ export abstract class BaseService {
         return BaseService.jsonResponse(
             res,
             400,
-            message ? message : "Unauthorized"
+            message ? message : "Bad Request Payload"
         );
     }
 

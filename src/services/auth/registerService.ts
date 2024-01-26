@@ -45,6 +45,9 @@ class RegisterService extends BaseService {
     }
     async checkValidUser(req: Request, res: Response) {
         try {
+            if(req.body.username){
+                return this.clientError(res)
+            }
             const user = await AuthApis.findUserByUserName(req.body.username)
             this.ok<{taken:boolean}>(res, {
                 taken: !!user
