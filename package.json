@@ -22,7 +22,7 @@
         "start": "node dist/server.js",
         "build": "npx tsc",
         "dict": "npx tsc -p .",
-        "dev": "nodemon --exec \"ts-node-esm src/server.ts\" --watch src --ext ts"
+        "dev": "nodemon --exec \"ts-node src/server.ts\" --watch src --ext ts"
     },
     "author": "",
     "license": "ISC",
