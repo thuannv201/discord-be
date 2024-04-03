@@ -7,6 +7,7 @@ import { IUserCredentials } from "@models/users/UserCredential";
 
 interface IRegisterResponse {
     userId: string;
+    userName:string
 }
 
 class RegisterService extends BaseService {
@@ -34,10 +35,11 @@ class RegisterService extends BaseService {
                 userId: createdUserInfo._id,
             };
             const { accessToken, refreshToken } = signUserToken(data);
-            res.cookie("accessToken", accessToken, { httpOnly: true });
-            res.cookie("refreshToken", refreshToken, { httpOnly: true });
+            res.cookie("accessToken", accessToken);
+            res.cookie("refreshToken", refreshToken);
             this.ok<IRegisterResponse>(res, {
                 userId: createdUserInfo._id,
+                userName: createdUserInfo.user_name
             });
         } catch (err: any) {
             this.fail(res, genarateErrorCode(err));
