@@ -30,7 +30,11 @@ app.get("/", (req, res) => {
 });
 routes(app);
 
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*",
+    },
+});
 io.on("connection", (socket) => {
     console.log("a user connected");
     socket.on("disconnect", () => {
