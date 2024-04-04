@@ -7,7 +7,7 @@ import { IUserCredentials } from "@models/users/UserCredential";
 
 interface IRegisterResponse {
     userId: string;
-    userName:string
+    userName: string;
 }
 
 class RegisterService extends BaseService {
@@ -35,25 +35,25 @@ class RegisterService extends BaseService {
                 userId: createdUserInfo._id,
             };
             const { accessToken, refreshToken } = signUserToken(data);
-            res.cookie("accessToken", accessToken);
-            res.cookie("refreshToken", refreshToken);
-            this.ok<IRegisterResponse>(res, {
-                userId: createdUserInfo._id,
-                userName: createdUserInfo.user_name
-            });
+            res.cookie("accessToken", accessToken)
+                .cookie("refreshToken", refreshToken)
+                .json({
+                    userId: createdUserInfo._id,
+                    userName: createdUserInfo.user_name,
+                });
         } catch (err: any) {
             this.fail(res, genarateErrorCode(err));
         }
     }
     async checkValidUser(req: Request, res: Response) {
         try {
-            if(!req.body.username){
-                return this.clientError(res)
+            if (!req.body.username) {
+                return this.clientError(res);
             }
-            const user = await AuthApis.findUserByUserName(req.body.username)
-            this.ok<{taken:boolean}>(res, {
-                taken: !!user
-            })
+            const user = await AuthApis.findUserByUserName(req.body.username);
+            this.ok<{ taken: boolean }>(res, {
+                taken: !!user,
+            });
         } catch (err: any) {
             this.fail(res, genarateErrorCode(err));
         }

@@ -35,15 +35,15 @@ class LoginService extends BaseService {
                 if (!isCorrectPassword) {
                     return this.fail(res, "Email or password are not correct");
                 }
-
                 const data = {
                     user_name: user_info.user_name,
                     user_email: user_info.user_email,
                     userId: user_info._id,
                 };
                 const { accessToken, refreshToken } = signUserToken(data);
-                res.cookie("accessToken", accessToken, { httpOnly: true });
-                res.cookie("refreshToken", refreshToken, { httpOnly: true });
+                res.cookie("accessToken", accessToken, {
+                    httpOnly: true,
+                }).cookie("refreshToken", refreshToken, { httpOnly: true });
                 this.ok<ITokenDTO>(res, {
                     userId: user_info._id,
                 });
