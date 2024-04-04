@@ -11,6 +11,8 @@ import cookieParser from "cookie-parser";
 
 const PORT = process.env.PORT || 5508;
 const app: Express = express();
+const httpServer = createServer(app);
+
 app.use(cookieParser());
 app.use(
     cors({
@@ -26,22 +28,16 @@ app.use(
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/chat.html");
 });
-
 routes(app);
 
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-    /* options */
-});
-io.on("connection", function (socket: Socket) {
-    socket.on("disconnect", function () {
-        console.log("disconnected");
+const io = new Server(httpServer);
+io.on("connection", (socket) => {
+    console.log("a user connected");
+    socket.on("disconnect", () => {
+        console.log("user disconnected");
     });
-    //server lắng nghe dữ liệu từ client
-    socket.on("Client-sent-data", function (data: SocketData) {
-        console.log("sent");
-        //sau khi lắng nghe dữ liệu, server phát lại dữ liệu này đến các client khác
-        socket.emit("Server-sent-data", data);
+    socket.on("chat message", (msg) => {
+        io.emit("chat message", msg);
     });
 });
 
